@@ -26,3 +26,6 @@ include(./think-core/src/sbs2.pri)
 
 HEADERS += \
     mycallback.h
+
+FORMS += \
+    uiMain.ui
