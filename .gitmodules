@@ -1,0 +1,3 @@
+[submodule "think-core"]
+	path = think-core
+	url = git://github.com/sinlab-semester-2013/think-core.git
