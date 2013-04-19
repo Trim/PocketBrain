@@ -18,7 +18,7 @@ QML_IMPORT_PATH =
 SOURCES += main.cpp \
     emotions.cpp \
     mycallback.cpp \
-    emoactor.cpp
+    pocketbrain.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 #include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -29,7 +29,7 @@ include(./think-core/src/sbs2.pri)
 HEADERS += \
     mycallback.h \
     emotions.h \
-    emoactor.h
+    pocketbrain.h
 
 OTHER_FILES += \
     android/src/org/kde/necessitas/ministro/IMinistro.aidl \
@@ -67,4 +67,4 @@ OTHER_FILES += \
     android/AndroidManifest.xml
 
 FORMS += \
-    uiEmoActor.ui
+    uiPocketBrain.ui

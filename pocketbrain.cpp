@@ -1,4 +1,4 @@
-#include "emoactor.h"
+#include "pocketbrain.h"
 
 emoactor::emoactor(QWidget *parent, Qt::WFlags f)
     : QWidget(parent, f)
