@@ -24,7 +24,7 @@ SOURCES += main.cpp \
 #include(qmlapplicationviewer/qmlapplicationviewer.pri)
 #qtcAddDeployment()
 
-include(./think-core/src/sbs2.pri)
+include(./think-core/src/think-core.pri)
 
 HEADERS += \
     mycallback.h \
