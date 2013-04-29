@@ -1,7 +1,7 @@
 # Add more folders to ship with the application, here
-#folder_01.source = qml/sbs2-HelloWorld
-#folder_01.target = qml
-#DEPLOYMENTFOLDERS = folder_01
+folder_01.source = qml/PocketBrain
+folder_01.target = qml
+DEPLOYMENTFOLDERS = folder_01
 
 # Additional import path used to resolve QML modules in Creator's code model
 QML_IMPORT_PATH =
@@ -21,8 +21,8 @@ SOURCES += main.cpp \
     pocketbrain.cpp
 
 # Please do not modify the following two lines. Required for deployment.
-#include(qmlapplicationviewer/qmlapplicationviewer.pri)
-#qtcAddDeployment()
+include(qmlapplicationviewer/qmlapplicationviewer.pri)
+qtcAddDeployment()
 
 include(./think-core/src/think-core.pri)
 
@@ -66,5 +66,3 @@ OTHER_FILES += \
     android/version.xml \
     android/AndroidManifest.xml
 
-FORMS += \
-    uiPocketBrain.ui
