@@ -2,6 +2,7 @@
 #define MYCALLBACK_H
 
 #include <sbs2callback.h>
+#include <sbs2datahandler.h>
 
 class MyCallback : public Sbs2Callback
 {
@@ -20,9 +21,7 @@ public:
     void getData(Sbs2Packet *packet);
 
 signals:
-    void arousalValue(double value);
-    void valenceValue(double value);
-
+    void arousalValence(double arousal, double valence);
 };
 
 #endif // MYCALLBACK_H

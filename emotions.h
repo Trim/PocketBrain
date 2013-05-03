@@ -2,54 +2,56 @@
 #define EMOTIONS_H
 
 #include <QString>
-#include <QTimer>
-#include <math.h>
+#include <QObject>
+#include <QDebug>
+#include <QMapIterator>
+#include <QVariant>
+#include "naivebaiseclassifier.h"
 
-#define UNSET_VALUE INFINITY
+#define NB_AROUSAL_VALENCE_BEFORE_CLASS 1000
 
 class Emotions : public QObject{
     Q_OBJECT
+
+private:
+    NaiveBaiseClassifier* _arousalClassifier;
+    NaiveBaiseClassifier* _valenceClassifier;
+
+    QMap<QString,QMap<double, double>*>* _trainedArousalClasses; // calm / exited
+    QMap<QString,QMap<double, double>*>* _trainedValenceClasses; // negative / positive
+
+    QMap<double, double>* _totalArousalOccurrences;
+    QMap<double, double>* _totalValenceOccurrences;
+
+    bool _saveCalm;
+    bool _saveJoy;
+    bool _saveSad;
+    bool _saveFear;
+
+    double _sizeSet;
+    int _nbInitDone;
+
+    QMap<double, double>* _arousalSet;
+    QMap<double, double>* _valenceSet;
+    QString curArousal;
+    QString curValence;
+
+    void insertValueAndTotal(QMap<double, double>* valueSet, QMap<double, double>* totalSet, double val);
+    void insertValue(QMap<double, double> *valueSet, double val);
+    void updateTrainedClass(QString arousal, QString valence);
+
 public:
     Emotions();
-private:
-    double arousal;
-    double arousal_4s;
-    double arousal_20s;
-    double arousal_max;
-    double arousal_min;
-    bool arousal_wait_4s;
-    bool arousal_wait_20s;
-
-    double valence;
-    double valence_4s;
-    double valence_20s;
-    double valence_max;
-    double valence_min;
-    bool valence_wait_4s;
-    bool valence_wait_20s;
-
-    double max_diff_arousal;
-    double max_diff_valence;
-
-    double max_arousal;
-    double min_arousal;
-
-    double max_valence;
-    double min_valence;
-
-    void resetValues();
-    void computeEmotion();
 
 public slots:
-    void compute_arousal(double value);
-    void compute_valence(double value);
-    void wait_arousal_4s();
-    void wait_arousal_20s();
-    void wait_valence_4s();
-    void wait_valence_20s();
+    void arousalValence(double arousal, double valence);
+    void initCalm();
+    void initJoy();
+    void initSad();
+    void initFear();
 
 signals:
-    void giveEmotion(QString emotion);
+    void giveEmotion(QVariant emotion);
 };
 
 #endif // EMOTIONS_H

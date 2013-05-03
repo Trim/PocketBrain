@@ -17,8 +17,8 @@ QML_IMPORT_PATH =
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     emotions.cpp \
-    mycallback.cpp \
-    pocketbrain.cpp
+    mycallback.cpp \ 
+    naivebaiseclassifier.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -28,8 +28,8 @@ include(./think-core/src/think-core.pri)
 
 HEADERS += \
     mycallback.h \
-    emotions.h \
-    pocketbrain.h
+    emotions.h \ 
+    naivebaiseclassifier.h
 
 OTHER_FILES += \
     android/src/org/kde/necessitas/ministro/IMinistro.aidl \

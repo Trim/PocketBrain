@@ -5,10 +5,8 @@ Rectangle {
     width: 640 //width of the window
     height: 640 //height of the window
     color: "black" //background color of the window
-    property int value: 0 //value of one EEG channel
-    property int filteredValue:0 // filtered value
-    property int powerValue: 0 //power value of one EEG channel
-    property int packetCounter: 0 //used for visualizing activity
+    property string emotion: "wait..." ;
+    property int packetCounter: 0 ;//used for visualizing activity
 
     /**
       Function receiving time ticks from C++ code.
@@ -18,30 +16,130 @@ Rectangle {
         page.packetCounter = (page.packetCounter + 1)%16;
     }
 
-    function channelValues(value_, filtered_)
+    function updateEmotion(emotion_)
     {
-        page.value = value_;
-        page.filteredValue = filtered_;
+        page.emotion = emotion_;
     }
+
+    signal initCalm;
+    signal initSad;
+    signal initFear;
+    signal initJoy;
 
     Rectangle
     {
         id: textRectangle;
         anchors.centerIn: parent;
-        width:300;
-        height:80;
+        width:640;
+        height:150;
         color:"black";
         Text{
             anchors.left: textRectangle.left;
             font.pixelSize: 60;
             color: "white";
-            text: page.value;
+            text: "I think you are : \n\t"+emotion;
         }
-        Text{
-            anchors.right: textRectangle.right;
-            font.pixelSize: 60;
-            color: "red";
-            text: page.filteredValue;
+    }
+
+    Rectangle
+    {
+        id: initDiv;
+        anchors.bottom: parent.bottom;
+        width:640;
+        height:50;
+        color:"black";
+
+        Rectangle{
+            id:initCalmDiv;
+            anchors.left: initDiv.left;
+            width:160;
+            height:50;
+            border.color:"white";
+            color:"black";
+            Text{
+                anchors.centerIn: initCalmDiv;
+                font.pixelSize: 20;
+                color: "white";
+                text: "InitCalm";
+            }
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    page.initCalm();
+                }
+            }
+        }
+
+        Rectangle{
+            id:initSadDiv;
+            anchors.left:initCalmDiv.right;
+            width:160;
+            height:50;
+            border.color: "white";
+            color:"black";
+            Text{
+                anchors.centerIn: initSadDiv;
+                font.pixelSize: 20;
+                color: "white";
+                text: "InitSad";
+            }
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    page.initSad();
+                }
+            }
+        }
+
+        Rectangle{
+            id:initFearDiv;
+            width:160;
+            height:50;
+            border.color:"white";
+            color:"black";
+            anchors.left: initSadDiv.right
+
+            Text{
+                anchors.centerIn: initFearDiv;
+                font.pixelSize: 20;
+                color: "white";
+                text: "InitFear";
+            }
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    page.initFear();
+                }
+            }
+        }
+
+        Rectangle{
+            id:initJoyDiv;
+            width:160;
+            height:50;
+            border.color:"white";
+            color:"black";
+            anchors.left: initFearDiv.right
+            Text{
+                anchors.centerIn: initJoyDiv;
+                font.pixelSize: 20;
+                color: "white";
+                text: "InitJoy";
+            }
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    page.initJoy();
+                }
+            }
         }
     }
 
@@ -69,14 +167,4 @@ Rectangle {
             }
         }
     }
-
-    Rectangle
-    {
-        //activity visualization
-        color: "blue"
-        height: 33
-        width: height
-        opacity: page.packetCounter/16.0
-    }
-
 }
