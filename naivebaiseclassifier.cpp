@@ -17,8 +17,10 @@ QString NaiveBaiseClassifier::classify(QMap<double, double> *featureSet){
     while (featureIt.hasNext()) {
         foreach(QString klass, _trainedClasses->keys()){
             classProbability->insert(klass,
-                                     classProbability->value(klass) + (featureIt.value() * log(probability(featureIt.key(), klass))));
+                                     classProbability->value(klass)
+                                     + (featureIt.value() * log(probability(featureIt.key(), klass))));
         }
+        featureIt.next();
     }
 
     QString resultClass="";

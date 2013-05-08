@@ -111,7 +111,7 @@ void Emotions::insertValue(QMap<double, double> *valueSet, double val){
 
 void Emotions::updateTrainedClass(QString arousal, QString valence){
     if(_trainedArousalClasses->contains(arousal)){
-        /*QMapIterator<double, double> arousalIt(*_arousalSet);
+        QMapIterator<double, double> arousalIt(*_arousalSet);
         while (arousalIt.hasNext()) {
             double curKey = arousalIt.key();
             double curVal = arousalIt.value();
@@ -121,13 +121,14 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
             }else{
                 _trainedArousalClasses->value(arousal)->insert(curKey,curVal);
             }
-        }*/
+            arousalIt.next();
+        }
     }else{
         _trainedArousalClasses->insert(arousal, _arousalSet);
     }
 
     if(_trainedValenceClasses->contains(valence)){
-        /*QMapIterator<double, double> valenceIt(*_valenceSet);
+        QMapIterator<double, double> valenceIt(*_valenceSet);
         while (valenceIt.hasNext()) {
             double curKey = valenceIt.key();
             double curVal = valenceIt.value();
@@ -137,7 +138,8 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
             }else{
                 _trainedValenceClasses->value(valence)->insert(curKey,curVal);
             }
-        }*/
+            valenceIt.next();
+        }
     }else{
         _trainedValenceClasses->insert(valence, _valenceSet);
     }
