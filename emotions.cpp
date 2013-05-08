@@ -68,6 +68,12 @@ void Emotions::arousalValence(double arousal, double valence){
         curArousal = _arousalClassifier->classify(_arousalSet);
         curValence = _valenceClassifier->classify(_valenceSet);
         emit giveEmotion(QVariant(curArousal+" "+curValence));
+        _sizeSet=0;
+        _arousalSet->clear();
+        _valenceSet->clear();
+    }else{
+        insertValue(_arousalSet, arousal);
+        insertValue(_valenceSet, valence);
     }
 }
 
