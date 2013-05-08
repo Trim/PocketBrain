@@ -10,11 +10,14 @@ class MyCallback : public Sbs2Callback
 private:
     int lowFreq;
     int highFreq;
+    int lowFreq2nd;
+    int highFreq2nd;
 
     QVector<double>* maxValues;
     QVector<double>* minValues;
 
-    void changeBand(QString band);
+    void initFilter();
+    int filterReady;
 
 public:
     explicit MyCallback(QObject *parent = 0);
