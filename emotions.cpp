@@ -8,58 +8,46 @@ Emotions::Emotions()
     _saveJoy=false;
     _saveSad=false;
     _saveFear=false;
-    _nbInitDone=0;
-    _sizeSet=0;
     _arousalSet = new QMap<double,double>();
     _valenceSet = new QMap<double,double>();
+
     _totalArousalOccurrences = new QMap<double, double>();
     _totalValenceOccurrences = new QMap<double, double>();
-
     _trainedArousalClasses = new QMap<QString, QMap<double, double>*>();
     _trainedValenceClasses = new QMap<QString, QMap<double, double>*>();
+
+    getClassifiers();
 }
 
 void Emotions::arousalValence(double arousal, double valence){
+    arousal=int(arousal)%10;
+    valence=int(valence)%10;
+
     insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousal);
     insertValueAndTotal(_valenceSet, _totalValenceOccurrences, valence);
-    _sizeSet++;
 
     if(_saveCalm){
-        if(_sizeSet >= NB_AROUSAL_VALENCE_BEFORE_CLASS){
-            updateTrainedClass("calm", "positive");
-            _saveCalm=false;
-            _nbInitDone++;
-            qDebug()<<"initCalm done";
-        }
+        updateTrainedClass("calm", "positive");
     }
     if(_saveJoy){
-        if(_sizeSet >= NB_AROUSAL_VALENCE_BEFORE_CLASS){
-            updateTrainedClass("exited", "positive");
-            _saveJoy=false;
-            _nbInitDone++;
-            qDebug()<<"initJoy done";
-        }
+        updateTrainedClass("exited", "positive");
     }
     if(_saveSad){
-        if(_sizeSet >= NB_AROUSAL_VALENCE_BEFORE_CLASS){
-            updateTrainedClass("calm", "negative");
-            _saveSad=false;
-            _nbInitDone++;
-            qDebug()<<"initSad done";
-        }
+        updateTrainedClass("calm", "negative");
     }
     if(_saveFear){
-        if(_sizeSet >= NB_AROUSAL_VALENCE_BEFORE_CLASS){
-            updateTrainedClass("exited", "negative");
-            _saveFear=false;
-            _nbInitDone++;
-            qDebug()<<"initFear done";
-        }
+        updateTrainedClass("exited", "negative");
     }
 
-    if(_nbInitDone==4 && _sizeSet>=NB_AROUSAL_VALENCE_BEFORE_CLASS){
+    if(_guess){
+        foreach(QString klass, _trainedArousalClasses->keys()){
+            qDebug()<<"Emo : klass "<<klass<<" has "<<_trainedArousalClasses->value(klass)->size()<<" values";
+        }
         if(_arousalClassifier==NULL){
             _arousalClassifier = new NaiveBaiseClassifier(_trainedArousalClasses, _totalArousalOccurrences);
+        }
+        foreach(QString klass, _trainedValenceClasses->keys()){
+            qDebug()<<"Emo : klass "<<klass<<" has "<<_trainedValenceClasses->value(klass)->size()<<" values";
         }
         if(_valenceClassifier==NULL){
             _valenceClassifier = new NaiveBaiseClassifier(_trainedValenceClasses, _totalValenceOccurrences);
@@ -67,34 +55,51 @@ void Emotions::arousalValence(double arousal, double valence){
 
         curArousal = _arousalClassifier->classify(_arousalSet);
         curValence = _valenceClassifier->classify(_valenceSet);
-        emit giveEmotion(QVariant(curArousal+" "+curValence));
-        _sizeSet=0;
-        _arousalSet->clear();
-        _valenceSet->clear();
-    }else{
-        insertValue(_arousalSet, arousal);
-        insertValue(_valenceSet, valence);
+
+        QString emotion;
+        if(curArousal.contains("calm") && curValence.contains("positive")){
+            emotion="calm";
+        }else if(curArousal.contains("calm") && curValence.contains("negative")){
+            emotion="sad";
+        }else if(curArousal.contains("exited") && curValence.contains("positive")){
+            emotion="joy";
+        }else if(curArousal.contains("exited") && curValence.contains("negative")){
+            emotion="fear";
+        }else{
+            emotion="impossible to know...";
+        }
+
+        emit giveEmotion(QVariant(emotion));
+        _guess=false;
     }
 }
 
-void Emotions::initCalm(){
-    qDebug()<<"initCalm begin";
-    _saveCalm = true;
+void Emotions::toggleSaveCalm(bool save){
+    _saveCalm = save;
+    _arousalSet->clear();
+    _valenceSet->clear();
 }
 
-void Emotions::initJoy(){
-    qDebug()<<"initJoy begin";
-    _saveJoy = true;
+void Emotions::toggleSaveJoy(bool save){
+    _saveJoy = save;
+    _arousalSet->clear();
+    _valenceSet->clear();
 }
 
-void Emotions::initSad(){
-    qDebug()<<"initSad begin";
-    _saveSad=true;
+void Emotions::toggleSaveSad(bool save){
+    _saveSad=save;
+    _arousalSet->clear();
+    _valenceSet->clear();
 }
 
-void Emotions::initFear(){
-    qDebug()<<"initFear begin";
-    _saveFear=true;
+void Emotions::toggleSaveFear(bool save){
+    _saveFear=save;
+    _arousalSet->clear();
+    _valenceSet->clear();
+}
+
+void Emotions::guessEmotion(){
+    _guess=true;
 }
 
 void Emotions::insertValueAndTotal(QMap<double, double> *valueSet, QMap<double, double> *totalSet, double val){
@@ -123,7 +128,7 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
             double curVal = arousalIt.value();
             if(_trainedArousalClasses->value(arousal)->contains(curKey)){
                 _trainedArousalClasses->value(arousal)->insert(curKey,
-                                               _trainedArousalClasses->value(arousal)->value(curKey)+curVal);
+                                                               _trainedArousalClasses->value(arousal)->value(curKey)+curVal);
             }else{
                 _trainedArousalClasses->value(arousal)->insert(curKey,curVal);
             }
@@ -140,7 +145,7 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
             double curVal = valenceIt.value();
             if(_trainedValenceClasses->value(valence)->contains(curKey)){
                 _trainedValenceClasses->value(valence)->insert(curKey,
-                                               _trainedValenceClasses->value(valence)->value(curKey)+curVal);
+                                                               _trainedValenceClasses->value(valence)->value(curKey)+curVal);
             }else{
                 _trainedValenceClasses->value(valence)->insert(curKey,curVal);
             }
@@ -149,7 +154,31 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
     }else{
         _trainedValenceClasses->insert(valence, _valenceSet);
     }
-    _arousalSet->clear();
-    _valenceSet->clear();
-    _sizeSet = 0;
+}
+
+void Emotions::storeClassifiers(){
+    QFile file(Sbs2Common::getRootAppPath()+"emotionClasses.dat");
+
+    if (!file.open(QIODevice::WriteOnly)) {
+        qDebug() << "Emotions : cannot open file emotionClasses.dat : "
+                 << qPrintable(file.errorString()) << file.fileName()<< endl;
+        return;
+    }
+    QDataStream out(&file);
+    out.setVersion(QDataStream::Qt_4_8);
+    out<<*_arousalClassifier;
+    out<<*_valenceClassifier;
+}
+
+void Emotions::getClassifiers(){
+    QFile file(Sbs2Common::getRootAppPath()+"emotionClasses.dat");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Emotions : cannot open file emotionClasses.dat : "
+                 << qPrintable(file.errorString()) << file.fileName() << endl;
+        return;
+    }
+    QDataStream in(&file);
+    in.setVersion(QDataStream::Qt_4_8);
+    in>>*_arousalClassifier;
+    in>>*_valenceClassifier;
 }

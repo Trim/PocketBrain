@@ -5,7 +5,7 @@ Rectangle {
     width: 640 //width of the window
     height: 640 //height of the window
     color: "black" //background color of the window
-    property string emotion: "wait..." ;
+    property string emotion: "... please train me" ;
     property int packetCounter: 0 ;//used for visualizing activity
 
     /**
@@ -19,25 +19,41 @@ Rectangle {
     function updateEmotion(emotion_)
     {
         page.emotion = emotion_;
+        infoText.text = "...you are "+emotion_;
     }
 
-    signal initCalm;
-    signal initSad;
-    signal initFear;
-    signal initJoy;
-
+    signal toggleSaveCalm(bool saving);
+    signal toggleSaveSad(bool saving);
+    signal toggleSaveFear(bool saving);
+    signal toggleSaveJoy(bool saving);
+    signal guessEmotion();
+    signal storeClassifiers();
     Rectangle
     {
-        id: textRectangle;
+        id: guessRectangle;
         anchors.centerIn: parent;
-        width:640;
+        width:parent.width/2;
         height:150;
         color:"black";
+        border.color: "white";
         Text{
-            anchors.left: textRectangle.left;
-            font.pixelSize: 60;
+            font.pixelSize: 40;
             color: "white";
-            text: "I think you are : \n\t"+emotion;
+            text: "Guess my emotion";
+            width:parent.width;
+            height:parent.height;
+            wrapMode: Text.Wrap;
+            horizontalAlignment: Text.AlignHCenter;
+            verticalAlignment: Text.AlignVCenter;
+        }
+        MouseArea
+        {
+            anchors.fill: parent
+            onClicked:
+            {
+                guessEmotion();
+                infoText.text = "I guess...";
+            }
         }
     }
 
@@ -45,101 +61,227 @@ Rectangle {
     {
         id: initDiv;
         anchors.bottom: parent.bottom;
-        width:640;
-        height:50;
+        width:parent.width;
+        height:80;
         color:"black";
 
         Rectangle{
             id:initCalmDiv;
             anchors.left: initDiv.left;
-            width:160;
-            height:50;
+            width:parent.width/4;
+            height:parent.height;
             border.color:"white";
             color:"black";
+            property bool saving: false;
             Text{
-                anchors.centerIn: initCalmDiv;
+                id:initCalmText;
+                anchors.top:parent.top;
                 font.pixelSize: 20;
+                width:parent.width;
+                height:parent.height-font.pixelSize;
                 color: "white";
-                text: "InitCalm";
+                text: "Start train";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
+            }
+            Text{
+                anchors.top: initCalmText.baseline;
+                width:parent.width;
+                font.pixelSize: initCalmText.font.pixelSize;
+                color: "white";
+                text: "Calm";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
             }
             MouseArea
             {
                 anchors.fill: parent
                 onClicked:
                 {
-                    page.initCalm();
+                    if(!initSadDiv.saving && !initFearDiv.saving && !initJoyDiv.saving){
+                        infoText.text="";
+                        parent.saving=!parent.saving;
+                        page.toggleSaveCalm(parent.saving);
+
+                        if(parent.saving){
+                            initCalmText.text="Stop train"; // it's the next action
+                        }else{
+                            initCalmText.text="Start train";
+                        }
+                    }else{
+                        infoText.text="Please stop other training before starting this one";
+                    }
                 }
             }
         }
 
+
         Rectangle{
             id:initSadDiv;
             anchors.left:initCalmDiv.right;
-            width:160;
-            height:50;
-            border.color: "white";
+            width:parent.width/4;
+            height:parent.height;
+            border.color:"white";
             color:"black";
+            property bool saving: false;
             Text{
-                anchors.centerIn: initSadDiv;
+                id:initSadText;
+                anchors.top:parent.top;
                 font.pixelSize: 20;
+                width:parent.width;
+                height:parent.height-font.pixelSize;
                 color: "white";
-                text: "InitSad";
+                text: "Start train";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
+            }
+            Text{
+                anchors.top: initSadText.baseline;
+                width:parent.width;
+                font.pixelSize: initSadText.font.pixelSize;
+                color: "white";
+                text: "Sad";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
             }
             MouseArea
             {
                 anchors.fill: parent
                 onClicked:
                 {
-                    page.initSad();
+                    if(!initCalmDiv.saving && !initFearDiv.saving && !initJoyDiv.saving){
+                        infoText.text="";
+                        parent.saving=!parent.saving;
+                        page.toggleSaveSad(parent.saving);
+
+                        if(parent.saving){
+                            initSadText.text="Stop train"; // it's the next action
+                        }else{
+                            initSadText.text="Start train";
+                        }
+                    }else{
+                        infoText.text="Please stop other training before starting this one";
+                    }
                 }
             }
         }
 
         Rectangle{
             id:initFearDiv;
-            width:160;
-            height:50;
+            anchors.left:initSadDiv.right;
+            width:parent.width/4;
+            height:parent.height;
             border.color:"white";
             color:"black";
-            anchors.left: initSadDiv.right
-
+            property bool saving: false;
             Text{
-                anchors.centerIn: initFearDiv;
+                id:initFearText;
+                anchors.top:parent.top;
                 font.pixelSize: 20;
+                width:parent.width;
+                height:parent.height-font.pixelSize;
                 color: "white";
-                text: "InitFear";
+                text: "Start train";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
+            }
+            Text{
+                anchors.top: initFearText.baseline;
+                width:parent.width;
+                font.pixelSize: initFearText.font.pixelSize;
+                color: "white";
+                text: "Fear";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
             }
             MouseArea
             {
                 anchors.fill: parent
                 onClicked:
                 {
-                    page.initFear();
+                    if(!initCalmDiv.saving && !initSadDiv.saving && !initJoyDiv.saving){
+                        infoText.text="";
+                        parent.saving=!parent.saving;
+                        page.toggleSaveFear(parent.saving);
+
+                        if(parent.saving){
+                            initFearText.text="Stop train"; // it's the next action
+                        }else{
+                            initFearText.text="Start train";
+                        }
+                    }else{
+                        infoText.text="Please stop other training before starting this one";
+                    }
                 }
             }
         }
 
         Rectangle{
             id:initJoyDiv;
-            width:160;
-            height:50;
+            anchors.left: initFearDiv.right
+            width:parent.width/4;
+            height:parent.height;
             border.color:"white";
             color:"black";
-            anchors.left: initFearDiv.right
+            property bool saving: false;
             Text{
-                anchors.centerIn: initJoyDiv;
+                id:initJoyText;
+                anchors.top:parent.top;
                 font.pixelSize: 20;
+                width:parent.width;
+                height:parent.height-font.pixelSize;
                 color: "white";
-                text: "InitJoy";
+                text: "Start train";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
+            }
+            Text{
+                anchors.top: initJoyText.baseline;
+                width:parent.width;
+                font.pixelSize: initJoyText.font.pixelSize;
+                color: "white";
+                text: "Joy";
+                horizontalAlignment: Text.AlignHCenter;
+                verticalAlignment: Text.AlignVCenter;
             }
             MouseArea
             {
                 anchors.fill: parent
                 onClicked:
                 {
-                    page.initJoy();
+                    if(!initCalmDiv.saving && !initFearDiv.saving && !initSadDiv.saving){
+                        infoText.text="";
+                        parent.saving=!parent.saving;
+                        page.toggleSaveJoy(parent.saving);
+
+                        if(parent.saving){
+                            initJoyText.text="Stop train"; // it's the next action
+                        }else{
+                            initJoyText.text="Start train";
+                        }
+                    }else{
+                        infoText.text="Please stop other training before starting this one";
+                    }
                 }
             }
+        }
+    }
+
+    Rectangle{
+        id:infoDiv;
+        width:parent.width;
+        height:50;
+        color:"black";
+        anchors.bottom: initDiv.top;
+        Text{
+         id:infoText;
+         color:"red";
+         text:"";
+         horizontalAlignment: Text.AlignHCenter;
+         verticalAlignment: Text.AlignVCenter;
+         width:parent.width;
+         height:parent.height;
+         font.pixelSize: 24;
         }
     }
 
@@ -164,6 +306,52 @@ Rectangle {
             onClicked:
             {
                 Qt.quit();
+            }
+        }
+    }
+
+    Rectangle
+    {
+        //quit button
+        color: "black";
+        border.color: "white";
+        anchors.right: parent.right
+        anchors.top: parent.top
+        width: 50
+        height: 50
+        Text
+        {
+            anchors.centerIn: parent
+            font.pixelSize: 40
+            color: "white";
+            text: "X"
+        }
+    }
+
+    Rectangle{
+        color:"black";
+        border.color: "white";
+        anchors.left:parent.left;
+        anchors.top:parent.top;
+        height:50;
+        width:150;
+        Text{
+            anchors.centerIn: parent
+            font.pixelSize: 20
+            color: "white";
+            text: "Store conf."
+        }
+        MouseArea
+        {
+            anchors.fill: parent
+            onClicked:
+            {
+                if(!initCalmDiv.saving && !initFearDiv.saving && !initSadDiv.saving && !initJoyDiv.saving){
+                    infoText.text="";
+                    page.storeClassifiers();
+                }else{
+                    infoText.text="Please stop training before saving";
+                }
             }
         }
     }

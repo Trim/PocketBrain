@@ -6,9 +6,8 @@
 #include <QDebug>
 #include <QMapIterator>
 #include <QVariant>
+#include "sbs2common.h"
 #include "naivebaiseclassifier.h"
-
-#define NB_AROUSAL_VALENCE_BEFORE_CLASS 1000
 
 class Emotions : public QObject{
     Q_OBJECT
@@ -27,9 +26,7 @@ private:
     bool _saveJoy;
     bool _saveSad;
     bool _saveFear;
-
-    double _sizeSet;
-    int _nbInitDone;
+    bool _guess;
 
     QMap<double, double>* _arousalSet;
     QMap<double, double>* _valenceSet;
@@ -39,19 +36,24 @@ private:
     void insertValueAndTotal(QMap<double, double>* valueSet, QMap<double, double>* totalSet, double val);
     void insertValue(QMap<double, double> *valueSet, double val);
     void updateTrainedClass(QString arousal, QString valence);
+    void getClassifiers();
 
 public:
     Emotions();
 
 public slots:
     void arousalValence(double arousal, double valence);
-    void initCalm();
-    void initJoy();
-    void initSad();
-    void initFear();
+    void toggleSaveCalm(bool save);
+    void toggleSaveFear(bool save);
+    void toggleSaveSad(bool save);
+    void toggleSaveJoy(bool save);
+    void guessEmotion();
+
+    void storeClassifiers();
 
 signals:
     void giveEmotion(QVariant emotion);
 };
+Q_DECLARE_METATYPE(NaiveBaiseClassifier);
 
 #endif // EMOTIONS_H

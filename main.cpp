@@ -6,6 +6,7 @@
 #include <mycallback.h>
 
 #include <QVariant>
+#include <QDir>
 #include "emotions.h"
 
 
@@ -17,6 +18,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qDebug() << "catalogPath: "<<Sbs2Common::setDefaultCatalogPath();
     //set path where application data is stored
     qDebug() << "rootAppPath: "<<Sbs2Common::setDefaultRootAppPath();
+    QDir* dir = new QDir();
+    dir->mkpath(Sbs2Common::getCatalogPath());
+    dir->mkpath(Sbs2Common::getRootAppPath());
 
     QmlApplicationViewer viewer;
     viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
@@ -31,10 +35,12 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     Emotions *emotions = new Emotions();
 
     QObject::connect(myCallback, SIGNAL(arousalValence(double, double)), emotions, SLOT(arousalValence(double,double)));
-    QObject::connect(rootObject, SIGNAL(initSad()), emotions, SLOT(initSad()));
-    QObject::connect(rootObject, SIGNAL(initCalm()), emotions, SLOT(initCalm()));
-    QObject::connect(rootObject, SIGNAL(initFear()), emotions, SLOT(initFear()));
-    QObject::connect(rootObject, SIGNAL(initJoy()), emotions, SLOT(initJoy()));
+    QObject::connect(rootObject, SIGNAL(toggleSaveSad(bool)), emotions, SLOT(toggleSaveSad(bool)));
+    QObject::connect(rootObject, SIGNAL(toggleSaveCalm(bool)), emotions, SLOT(toggleSaveCalm(bool)));
+    QObject::connect(rootObject, SIGNAL(toggleSaveFear(bool)), emotions, SLOT(toggleSaveFear(bool)));
+    QObject::connect(rootObject, SIGNAL(toggleSaveJoy(bool)), emotions, SLOT(toggleSaveJoy(bool)));
+    QObject::connect(rootObject, SIGNAL(storeClassifiers()), emotions, SLOT(storeClassifiers()));
+    QObject::connect(rootObject, SIGNAL(guessEmotion()), emotions, SLOT(guessEmotion()));
     QObject::connect(emotions, SIGNAL(giveEmotion(QVariant)), rootObject, SLOT(updateEmotion(QVariant)));
     QObject::connect(myCallback,SIGNAL(timeTick8()),rootObject,SLOT(timeTick()));
 
