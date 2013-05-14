@@ -26,5 +26,4 @@ public:
 signals:
     void arousalValence(double arousal, double valence);
 };
-
 #endif // MYCALLBACK_H
