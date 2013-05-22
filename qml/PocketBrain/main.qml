@@ -28,6 +28,8 @@ Rectangle {
     signal toggleSaveJoy(bool saving);
     signal guessEmotion();
     signal storeClassifiers();
+    signal recordData(bool record);
+
     Rectangle
     {
         id: guessRectangle;
@@ -51,8 +53,12 @@ Rectangle {
             anchors.fill: parent
             onClicked:
             {
-                guessEmotion();
-                infoText.text = "I guess...";
+                if(!recordButton.record){
+                    infoText.text = "Record some data before I can guess";
+                }else{
+                    guessEmotion();
+                    infoText.text = "I guess...";
+                }
             }
         }
     }
@@ -285,74 +291,100 @@ Rectangle {
         }
     }
 
-    Rectangle
-    {
-        //quit button
-        color: "red"
-        anchors.right: parent.right
-        anchors.top: parent.top
-        width: 50
-        height: 50
-        Text
-        {
-            anchors.centerIn: parent
-            font.pixelSize: 40
-            color: "white";
-            text: "X"
-        }
-        MouseArea
-        {
-            anchors.fill: parent
-            onClicked:
+    Rectangle{
+        id:topbar;
+        anchors.top:parent.top;
+        anchors.left:parent.left;
+        color:"black";
+        height:50;
+        width:parent.width;
+
+        Rectangle{
+            id:storeButton;
+            color:"black";
+            border.color: "white";
+            anchors.left:parent.left;
+            anchors.top:parent.top;
+            height:parent.height;
+            width:150;
+            Text{
+                anchors.centerIn: parent
+                font.pixelSize: 20
+                color: "white";
+                text: "Store conf."
+            }
+            MouseArea
             {
-                Qt.quit();
+                anchors.fill: parent
+                onClicked:
+                {
+                    if(!initCalmDiv.saving && !initFearDiv.saving && !initSadDiv.saving && !initJoyDiv.saving){
+                        infoText.text="";
+                        page.storeClassifiers();
+                    }else{
+                        infoText.text="Please stop training before saving";
+                    }
+                }
             }
         }
-    }
 
-    Rectangle
-    {
-        //quit button
-        color: "black";
-        border.color: "white";
-        anchors.right: parent.right
-        anchors.top: parent.top
-        width: 50
-        height: 50
-        Text
-        {
-            anchors.centerIn: parent
-            font.pixelSize: 40
-            color: "white";
-            text: "X"
-        }
-    }
-
-    Rectangle{
-        color:"black";
-        border.color: "white";
-        anchors.left:parent.left;
-        anchors.top:parent.top;
-        height:50;
-        width:150;
-        Text{
-            anchors.centerIn: parent
-            font.pixelSize: 20
-            color: "white";
-            text: "Store conf."
-        }
-        MouseArea
-        {
-            anchors.fill: parent
-            onClicked:
+        Rectangle{
+            id:recordButton;
+            color:"black";
+            border.color: "white";
+            anchors.left:storeButton.right;
+            anchors.top:parent.top;
+            height:parent.height;
+            width:150;
+            property bool record: false;
+            Text{
+                id:recordText;
+                anchors.centerIn: parent
+                font.pixelSize: 20
+                color: "white";
+                text: "Start record"
+            }
+            MouseArea
             {
-                if(!initCalmDiv.saving && !initFearDiv.saving && !initSadDiv.saving && !initJoyDiv.saving){
-                    infoText.text="";
-                    page.storeClassifiers();
-                }else{
-                    infoText.text="Please stop training before saving";
+                anchors.fill: parent
+                onClicked:
+                {
+                    parent.record=!parent.record;
+                    recordData(parent.record);
+                    if(parent.record){
+                        recordText.text="Stop record"; // it's the next action
+                    }else{
+                        recordText.text="Start record";
+                    }
+                }
+            }
+        }
+
+        Rectangle
+        {
+            //quit button
+            anchors.right: parent.right
+            anchors.top: parent.top
+            width: 50
+            height: parent.height;
+            color:"black"
+            border.color: "white"
+            Text
+            {
+                anchors.centerIn: parent
+                font.pixelSize: parent.height;
+                color: "white";
+                text: "X"
+            }
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked:
+                {
+                    Qt.quit();
                 }
             }
         }
     }
+
 }

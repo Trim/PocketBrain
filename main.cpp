@@ -41,6 +41,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(rootObject, SIGNAL(toggleSaveJoy(bool)), emotions, SLOT(toggleSaveJoy(bool)));
     QObject::connect(rootObject, SIGNAL(storeClassifiers()), emotions, SLOT(storeClassifiers()));
     QObject::connect(rootObject, SIGNAL(guessEmotion()), emotions, SLOT(guessEmotion()));
+    QObject::connect(rootObject, SIGNAL(recordData(bool)), emotions, SLOT(recordData(bool)));
     QObject::connect(emotions, SIGNAL(giveEmotion(QVariant)), rootObject, SLOT(updateEmotion(QVariant)));
     QObject::connect(myCallback,SIGNAL(timeTick8()),rootObject,SLOT(timeTick()));
 

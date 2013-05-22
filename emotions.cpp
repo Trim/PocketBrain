@@ -16,6 +16,13 @@ Emotions::Emotions()
     _trainedArousalClasses = new QMap<QString, QMap<double, double>*>();
     _trainedValenceClasses = new QMap<QString, QMap<double, double>*>();
 
+    _guess=false;
+    _record=false;
+    _saveCalm=false;
+    _saveJoy=false;
+    _saveSad=false;
+    _saveFear=false;
+
     getClassifiers();
 }
 
@@ -23,8 +30,10 @@ void Emotions::arousalValence(double arousal, double valence){
     arousal=int(arousal)%10;
     valence=int(valence)%10;
 
-    insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousal);
-    insertValueAndTotal(_valenceSet, _totalValenceOccurrences, valence);
+    if(_record){
+        insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousal);
+        insertValueAndTotal(_valenceSet, _totalValenceOccurrences, valence);
+    }
 
     if(_saveCalm){
         updateTrainedClass("calm", "positive");
@@ -96,6 +105,13 @@ void Emotions::toggleSaveFear(bool save){
     _saveFear=save;
     _arousalSet->clear();
     _valenceSet->clear();
+}
+
+void Emotions::recordData(bool record){
+    _record=record;
+    if(!record){
+        resetCurrData();
+    }
 }
 
 void Emotions::guessEmotion(){

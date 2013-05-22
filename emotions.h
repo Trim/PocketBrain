@@ -27,6 +27,7 @@ private:
     bool _saveSad;
     bool _saveFear;
     bool _guess;
+    bool _record;
 
     QMap<double, double>* _arousalSet;
     QMap<double, double>* _valenceSet;
@@ -48,7 +49,7 @@ public slots:
     void toggleSaveSad(bool save);
     void toggleSaveJoy(bool save);
     void guessEmotion();
-
+    void recordData(bool record);
     void storeClassifiers();
 
 signals:
