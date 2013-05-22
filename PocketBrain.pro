@@ -18,7 +18,7 @@ QML_IMPORT_PATH =
 SOURCES += main.cpp \
     emotions.cpp \
     mycallback.cpp \ 
-    naivebaiseclassifier.cpp
+    naivebayesclassifier.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
@@ -29,7 +29,7 @@ include(./think-core/src/think-core.pri)
 HEADERS += \
     mycallback.h \
     emotions.h \ 
-    naivebaiseclassifier.h
+    naivebayesclassifier.h
 
 OTHER_FILES += \
     android/src/org/kde/necessitas/ministro/IMinistro.aidl \

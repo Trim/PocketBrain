@@ -7,7 +7,7 @@
 #include <QMapIterator>
 #include <QVariant>
 #include "sbs2common.h"
-#include "naivebaiseclassifier.h"
+#include "naivebayesclassifier.h"
 
 // Number of decimals for arousal/valence (too high give bad results, too low too)
 #define EMOTION_AROUSAL_ACCURACY 4
@@ -17,8 +17,8 @@ class Emotions : public QObject{
     Q_OBJECT
 
 private:
-    NaiveBaiseClassifier* _arousalClassifier;
-    NaiveBaiseClassifier* _valenceClassifier;
+    NaiveBayesClassifier* _arousalClassifier;
+    NaiveBayesClassifier* _valenceClassifier;
 
     QMap<QString,QMap<double, double>*>* _trainedArousalClasses; // calm / exited
     QMap<QString,QMap<double, double>*>* _trainedValenceClasses; // negative / positive
@@ -62,6 +62,5 @@ public slots:
 signals:
     void giveEmotion(QVariant emotion);
 };
-//Q_DECLARE_METATYPE(NaiveBaiseClassifier);
 
 #endif // EMOTIONS_H

@@ -2,8 +2,8 @@
 This code was inspired by this article :
 http://www.nils-haldenwang.de/computer-science/machine-learning/how-to-apply-naive-bayes-classifiers-to-document-classification-problems
 */
-#ifndef NAIVEBAISECLASSIFIER_H
-#define NAIVEBAISECLASSIFIER_H
+#ifndef NAIVEBAYESCLASSIFIER_H
+#define NAIVEBAYESCLASSIFIER_H
 
 #include <QMap>
 #include <QMapIterator>
@@ -13,11 +13,11 @@ http://www.nils-haldenwang.de/computer-science/machine-learning/how-to-apply-nai
 #include <QDataStream>
 #include <QDebug>
 
-class NaiveBaiseClassifier: public QObject{
+class NaiveBayesClassifier: public QObject{
     Q_OBJECT
 
-    friend QDataStream& operator <<( QDataStream& stream, const NaiveBaiseClassifier& bookmark );
-    friend QDataStream& operator >>( QDataStream& stream, NaiveBaiseClassifier& bookmark );
+    friend QDataStream& operator <<( QDataStream& stream, const NaiveBayesClassifier& bookmark );
+    friend QDataStream& operator >>( QDataStream& stream, NaiveBayesClassifier& bookmark );
 
 private:
     QMap<QString,QMap<double, double>*> * _trainedClasses;
@@ -26,20 +26,20 @@ private:
     double probability(double feature, QString klass);
 
 public:
-    NaiveBaiseClassifier();
-    NaiveBaiseClassifier(QMap<QString,QMap<double, double>*>* trainedClasses,   // key : class name, value : value found during training and their number of occurences
+    NaiveBayesClassifier();
+    NaiveBayesClassifier(QMap<QString,QMap<double, double>*>* trainedClasses,   // key : class name, value : value found during training and their number of occurences
                          QMap<double, double>* totalFeatureOccurrences); // key : found feature, value : total of occurences sum of every class
-    NaiveBaiseClassifier(QMap<QString,QMap<double, double>*>& trainedClasses,
+    NaiveBayesClassifier(QMap<QString,QMap<double, double>*>& trainedClasses,
                          QMap<double, double>& totalFeatureOccurrences);
-    NaiveBaiseClassifier(const NaiveBaiseClassifier& naiveBaise);
-    NaiveBaiseClassifier&  operator=(const NaiveBaiseClassifier& naiveBaise);
+    NaiveBayesClassifier(const NaiveBayesClassifier& naiveBayes);
+    NaiveBayesClassifier&  operator=(const NaiveBayesClassifier& naiveBayes);
 
     QString classify(QMap<double, double>* featureSet); // featureSet : set of values to classify with number of occurence
     QMap<QString,QMap<double, double>*> &getTrainedClasses() const;
     QMap<double, double> &getTotalFeatureOccurences() const;
 };
 
-QDataStream &operator<<(QDataStream &out, const NaiveBaiseClassifier &naiveBaise);
-QDataStream &operator>>(QDataStream &in, NaiveBaiseClassifier &naiveBaise);
+QDataStream &operator<<(QDataStream &out, const NaiveBayesClassifier &naiveBayes);
+QDataStream &operator>>(QDataStream &in, NaiveBayesClassifier &naiveBayes);
 
-#endif // NAIVEBAISECLASSIFIER_H
+#endif // NAIVEBAYESCLASSIFIER_H

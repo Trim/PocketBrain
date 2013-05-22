@@ -1,11 +1,11 @@
-#include "naivebaiseclassifier.h"
+#include "naivebayesclassifier.h"
 
-NaiveBaiseClassifier::NaiveBaiseClassifier(){
+NaiveBayesClassifier::NaiveBayesClassifier(){
     _trainedClasses=new QMap<QString,QMap<double, double>*>();
     _totalFeatureOccurrences = new QMap<double,double>();
 }
 
-NaiveBaiseClassifier::NaiveBaiseClassifier(QMap<QString, QMap<double, double> *> *trainedClasses,
+NaiveBayesClassifier::NaiveBayesClassifier(QMap<QString, QMap<double, double> *> *trainedClasses,
                                            QMap<double, double> *totalFeatureOccurrences){
     _trainedClasses = new QMap<QString, QMap<double,double>*>(*trainedClasses);
     foreach(QString klass, _trainedClasses->keys()){
@@ -15,7 +15,7 @@ NaiveBaiseClassifier::NaiveBaiseClassifier(QMap<QString, QMap<double, double> *>
     _totalFeatureOccurrences=new QMap<double,double>(*totalFeatureOccurrences);
 }
 
-NaiveBaiseClassifier::NaiveBaiseClassifier(QMap<QString, QMap<double, double> *> &trainedClasses,
+NaiveBayesClassifier::NaiveBayesClassifier(QMap<QString, QMap<double, double> *> &trainedClasses,
                                            QMap<double, double> &totalFeatureOccurrences){
     _trainedClasses = new QMap<QString, QMap<double,double>*>(trainedClasses);
     foreach(QString klass, _trainedClasses->keys()){
@@ -25,7 +25,7 @@ NaiveBaiseClassifier::NaiveBaiseClassifier(QMap<QString, QMap<double, double> *>
     _totalFeatureOccurrences=new QMap<double,double>(totalFeatureOccurrences);
 }
 
-QString NaiveBaiseClassifier::classify(QMap<double, double> *featureSet){
+QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
     QMap<QString, double> * classProbability = new QMap<QString, double>();
 
     foreach(QString klass, _trainedClasses->keys()){
@@ -62,37 +62,37 @@ QString NaiveBaiseClassifier::classify(QMap<double, double> *featureSet){
     return resultClass;
 }
 
-double NaiveBaiseClassifier::probability(double feature, QString klass){
+double NaiveBayesClassifier::probability(double feature, QString klass){
     double num = _trainedClasses->value(klass)->value(feature)+1.0;
     double den = _totalFeatureOccurrences->value(feature)+_trainedClasses->size();
     return num/den;
 }
 
-QMap<QString,QMap<double, double>*>& NaiveBaiseClassifier::getTrainedClasses() const{
+QMap<QString,QMap<double, double>*>& NaiveBayesClassifier::getTrainedClasses() const{
     return *_trainedClasses;
 }
 
-QMap<double, double>& NaiveBaiseClassifier::getTotalFeatureOccurences() const{
+QMap<double, double>& NaiveBayesClassifier::getTotalFeatureOccurences() const{
     return *_totalFeatureOccurrences;
 }
 
-QDataStream &operator<<(QDataStream &out, const NaiveBaiseClassifier &naiveBaise){
+QDataStream &operator<<(QDataStream &out, const NaiveBayesClassifier &naiveBayes){
     QMap<QString, QMap<double,double>*>* trainedClasses =
-            new QMap<QString, QMap<double,double>*>(naiveBaise.getTrainedClasses());
-    qDebug()<<"size  : "<<naiveBaise.getTrainedClasses().size();
-    out<<naiveBaise.getTrainedClasses().size();
+            new QMap<QString, QMap<double,double>*>(naiveBayes.getTrainedClasses());
+    qDebug()<<"size  : "<<naiveBayes.getTrainedClasses().size();
+    out<<naiveBayes.getTrainedClasses().size();
 
     foreach(QString klass, trainedClasses->keys()){
         out<<klass;
         out<<*(trainedClasses->value(klass));
     }
-    out << naiveBaise.getTotalFeatureOccurences();
+    out << naiveBayes.getTotalFeatureOccurences();
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, NaiveBaiseClassifier &naiveBaise){
+QDataStream &operator>>(QDataStream &in, NaiveBayesClassifier &naiveBayes){
     int sizeMap;
-    naiveBaise._trainedClasses=new QMap<QString,QMap<double, double>*>();
+    naiveBayes._trainedClasses=new QMap<QString,QMap<double, double>*>();
 
     QMap<double, double> totalFeatureOccurences;
 
@@ -101,8 +101,8 @@ QDataStream &operator>>(QDataStream &in, NaiveBaiseClassifier &naiveBaise){
         QMap<double, double> trainedValue;
         QString trainedKey;
         in >> trainedKey >> trainedValue;
-        naiveBaise._trainedClasses->insert(trainedKey, &trainedValue);
+        naiveBayes._trainedClasses->insert(trainedKey, &trainedValue);
     }
-    in >> *(naiveBaise._totalFeatureOccurrences);
+    in >> *(naiveBayes._totalFeatureOccurrences);
     return in;
 }

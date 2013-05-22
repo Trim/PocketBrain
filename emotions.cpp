@@ -2,8 +2,8 @@
 
 Emotions::Emotions()
 {
-    _arousalClassifier=new NaiveBaiseClassifier();
-    _valenceClassifier=new NaiveBaiseClassifier();
+    _arousalClassifier=new NaiveBayesClassifier();
+    _valenceClassifier=new NaiveBayesClassifier();
     _saveCalm=false;
     _saveJoy=false;
     _saveSad=false;
@@ -55,13 +55,13 @@ void Emotions::arousalValence(double arousal, double valence){
             qDebug()<<"Emo : klass "<<klass<<" has "<<_trainedArousalClasses->value(klass)->size()<<" values";
         }
         if(_arousalClassifier==NULL){
-            _arousalClassifier = new NaiveBaiseClassifier(_trainedArousalClasses, _totalArousalOccurrences);
+            _arousalClassifier = new NaiveBayesClassifier(_trainedArousalClasses, _totalArousalOccurrences);
         }
         foreach(QString klass, _trainedValenceClasses->keys()){
             qDebug()<<"Emo : klass "<<klass<<" has "<<_trainedValenceClasses->value(klass)->size()<<" values";
         }
         if(_valenceClassifier==NULL){
-            _valenceClassifier = new NaiveBaiseClassifier(_trainedValenceClasses, _totalValenceOccurrences);
+            _valenceClassifier = new NaiveBayesClassifier(_trainedValenceClasses, _totalValenceOccurrences);
         }
 
         curArousal = _arousalClassifier->classify(_arousalSet);
