@@ -38,6 +38,7 @@ private:
     void insertValue(QMap<double, double> *valueSet, double val);
     void updateTrainedClass(QString arousal, QString valence);
     void getClassifiers();
+    void resetCurrData();
 
 public:
     Emotions();

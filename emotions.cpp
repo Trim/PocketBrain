@@ -85,26 +85,22 @@ void Emotions::arousalValence(double arousal, double valence){
 
 void Emotions::toggleSaveCalm(bool save){
     _saveCalm = save;
-    _arousalSet->clear();
-    _valenceSet->clear();
+    resetCurrData();
 }
 
 void Emotions::toggleSaveJoy(bool save){
     _saveJoy = save;
-    _arousalSet->clear();
-    _valenceSet->clear();
+    resetCurrData();
 }
 
 void Emotions::toggleSaveSad(bool save){
     _saveSad=save;
-    _arousalSet->clear();
-    _valenceSet->clear();
+    resetCurrData();
 }
 
 void Emotions::toggleSaveFear(bool save){
     _saveFear=save;
-    _arousalSet->clear();
-    _valenceSet->clear();
+    resetCurrData();
 }
 
 void Emotions::recordData(bool record){
@@ -197,4 +193,9 @@ void Emotions::getClassifiers(){
     in.setVersion(QDataStream::Qt_4_8);
     in>>*_arousalClassifier;
     in>>*_valenceClassifier;
+}
+
+void Emotions::resetCurrData(){
+    _arousalSet->clear();
+    _valenceSet->clear();
 }
