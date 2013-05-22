@@ -39,11 +39,9 @@ void MyCallback::getData(Sbs2Packet *packet)
     // So we'll apply same idea than colorOfMind but we use sensors otherwise
 
     // colorOfMind : (front beta power)/(front alpha power)
-    double arousal = (af3_alpha/af3_beta + af4_alpha/af4_beta)/2;
+    double arousal = (af3_beta/af3_alpha + af4_beta/af4_alpha)/2;
     // colorOfMind : Valence = (left beta power)/(left alpha power) – (right beta power)/(right alpha power)
-    double valence = (af4_alpha/af4_beta - af3_alpha/af3_beta);
-    //arousal = af3_alpha;
-    //valence=thisPacket->values["AF3"];
+    double valence = (af3_beta/af3_alpha - af4_beta/af4_alpha);
 
     //qDebug()<<"arousal : "<<arousal<<" and valence : "<<valence<<" emited";
     emit arousalValence(arousal,valence);
