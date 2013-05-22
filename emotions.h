@@ -23,6 +23,7 @@ private:
     QMap<QString,QMap<double, double>*>* _trainedArousalClasses; // calm / exited
     QMap<QString,QMap<double, double>*>* _trainedValenceClasses; // negative / positive
 
+    // Sets with value and with number of occurences over all the process and over all states
     QMap<double, double>* _totalArousalOccurrences;
     QMap<double, double>* _totalValenceOccurrences;
 
@@ -33,6 +34,7 @@ private:
     bool _guess;
     bool _record;
 
+    // Sets with value and current number of found values
     QMap<double, double>* _arousalSet;
     QMap<double, double>* _valenceSet;
     QString curArousal;

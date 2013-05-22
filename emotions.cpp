@@ -30,6 +30,7 @@ void Emotions::arousalValence(double arousal, double valence){
     arousal=(int)(arousal*pow10(EMOTION_AROUSAL_ACCURACY));
     valence=(int)(valence*pow10(EMOTION_VALENCE_ACCURACY));
 
+    //qDebug()<<"arousal : "<<arousal<<" and valence : "<<valence<<" received";
 
     if(_record){
         insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousal);
@@ -76,7 +77,7 @@ void Emotions::arousalValence(double arousal, double valence){
         }else if(curArousal.contains("exited") && curValence.contains("negative")){
             emotion="fear";
         }else{
-            emotion="impossible to know...";
+            emotion="try again later";
         }
 
         emit giveEmotion(QVariant(emotion));
@@ -170,7 +171,7 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
 }
 
 void Emotions::storeClassifiers(){
-    QFile file(Sbs2Common::getRootAppPath()+"emotionClasses.dat");
+    QFile file(Sbs2Common::getRootAppPath()+"emotionClasses_"+(int)(EMOTION_AROUSAL_ACCURACY)+"ar_"+(int)(EMOTION_VALENCE_ACCURACY)+"val.dat");
 
     if (!file.open(QIODevice::WriteOnly)) {
         qDebug() << "Emotions : cannot open file emotionClasses.dat : "
@@ -184,7 +185,7 @@ void Emotions::storeClassifiers(){
 }
 
 void Emotions::getClassifiers(){
-    QFile file(Sbs2Common::getRootAppPath()+"emotionClasses.dat");
+    QFile file(Sbs2Common::getRootAppPath()+"emotionClasses_"+(int)(EMOTION_AROUSAL_ACCURACY)+"ar_"+(int)(EMOTION_VALENCE_ACCURACY)+"val.dat");
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "Emotions : cannot open file emotionClasses.dat : "
                  << qPrintable(file.errorString()) << file.fileName() << endl;
