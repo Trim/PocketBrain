@@ -1,31 +1,5 @@
 #include "naivebaiseclassifier.h"
 
-NaiveBaiseClassifier::NaiveBaiseClassifier(const NaiveBaiseClassifier& naiveBaise){
-    qDebug()<<"will copy nbc by constructor";
-    _trainedClasses = new QMap<QString, QMap<double, double>*>(naiveBaise.getTrainedClasses());
-    _totalFeatureOccurrences = new QMap<double,double>(naiveBaise.getTotalFeatureOccurences());
-}
-
-NaiveBaiseClassifier&  NaiveBaiseClassifier::operator=(const NaiveBaiseClassifier& naiveBaise) {
-    if ( this == &naiveBaise ) {
-        return *this; //Self assignment : nothing to do
-    }
-
-    QMap<double,double>* tmpOcc = new QMap<double,double>(naiveBaise.getTotalFeatureOccurences());
-    foreach(double feature, tmpOcc->keys()){
-        qDebug()<<feature;
-        //_totalFeatureOccurrences->insert(feature, tmpOcc->value(feature));
-    }
-    qDebug()<<"Done !";
-
-    QMapIterator<QString, QMap<double,double>*> trainedCl(naiveBaise.getTrainedClasses());
-    while(trainedCl.hasNext()){
-        _trainedClasses->insert(trainedCl.key(),trainedCl.value());
-        trainedCl.next();
-    }
-    return *this;
-}
-
 NaiveBaiseClassifier::NaiveBaiseClassifier(){
     _trainedClasses=new QMap<QString,QMap<double, double>*>();
     _totalFeatureOccurrences = new QMap<double,double>();
@@ -118,7 +92,8 @@ QDataStream &operator<<(QDataStream &out, const NaiveBaiseClassifier &naiveBaise
 
 QDataStream &operator>>(QDataStream &in, NaiveBaiseClassifier &naiveBaise){
     int sizeMap;
-    QMap<QString,QMap<double, double>*> trainedClasses;
+    naiveBaise._trainedClasses=new QMap<QString,QMap<double, double>*>();
+
     QMap<double, double> totalFeatureOccurences;
 
     in >> sizeMap;
@@ -126,12 +101,8 @@ QDataStream &operator>>(QDataStream &in, NaiveBaiseClassifier &naiveBaise){
         QMap<double, double> trainedValue;
         QString trainedKey;
         in >> trainedKey >> trainedValue;
-        trainedClasses.insert(trainedKey, &trainedValue);
+        naiveBaise._trainedClasses->insert(trainedKey, &trainedValue);
     }
-
-    in >> totalFeatureOccurences;
-    qDebug()<<"Ready to read";
-    naiveBaise = *(new NaiveBaiseClassifier(trainedClasses, totalFeatureOccurences));
-    qDebug()<<"...read";
+    in >> *(naiveBaise._totalFeatureOccurrences);
     return in;
 }

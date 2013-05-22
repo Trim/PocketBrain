@@ -2,8 +2,8 @@
 
 Emotions::Emotions()
 {
-    _arousalClassifier=NULL;
-    _valenceClassifier=NULL;
+    _arousalClassifier=new NaiveBaiseClassifier();
+    _valenceClassifier=new NaiveBaiseClassifier();
     _saveCalm=false;
     _saveJoy=false;
     _saveSad=false;
@@ -140,6 +140,7 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
     if(_trainedArousalClasses->contains(arousal)){
         QMapIterator<double, double> arousalIt(*_arousalSet);
         while (arousalIt.hasNext()) {
+            arousalIt.next();
             double curKey = arousalIt.key();
             double curVal = arousalIt.value();
             if(_trainedArousalClasses->value(arousal)->contains(curKey)){
@@ -148,7 +149,6 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
             }else{
                 _trainedArousalClasses->value(arousal)->insert(curKey,curVal);
             }
-            arousalIt.next();
         }
     }else{
         _trainedArousalClasses->insert(arousal, _arousalSet);
@@ -157,6 +157,7 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
     if(_trainedValenceClasses->contains(valence)){
         QMapIterator<double, double> valenceIt(*_valenceSet);
         while (valenceIt.hasNext()) {
+            valenceIt.next();
             double curKey = valenceIt.key();
             double curVal = valenceIt.value();
             if(_trainedValenceClasses->value(valence)->contains(curKey)){
@@ -165,7 +166,6 @@ void Emotions::updateTrainedClass(QString arousal, QString valence){
             }else{
                 _trainedValenceClasses->value(valence)->insert(curKey,curVal);
             }
-            valenceIt.next();
         }
     }else{
         _trainedValenceClasses->insert(valence, _valenceSet);

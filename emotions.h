@@ -55,6 +55,6 @@ public slots:
 signals:
     void giveEmotion(QVariant emotion);
 };
-Q_DECLARE_METATYPE(NaiveBaiseClassifier);
+//Q_DECLARE_METATYPE(NaiveBaiseClassifier);
 
 #endif // EMOTIONS_H

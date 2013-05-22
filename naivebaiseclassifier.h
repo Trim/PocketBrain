@@ -15,6 +15,10 @@ http://www.nils-haldenwang.de/computer-science/machine-learning/how-to-apply-nai
 
 class NaiveBaiseClassifier: public QObject{
     Q_OBJECT
+
+    friend QDataStream& operator <<( QDataStream& stream, const NaiveBaiseClassifier& bookmark );
+    friend QDataStream& operator >>( QDataStream& stream, NaiveBaiseClassifier& bookmark );
+
 private:
     QMap<QString,QMap<double, double>*> * _trainedClasses;
     QMap<double, double> * _totalFeatureOccurrences;
