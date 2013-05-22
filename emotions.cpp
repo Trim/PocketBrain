@@ -27,8 +27,9 @@ Emotions::Emotions()
 }
 
 void Emotions::arousalValence(double arousal, double valence){
-    arousal=int(arousal)%10;
-    valence=int(valence)%10;
+    arousal=(int)(arousal*pow10(EMOTION_AROUSAL_ACCURACY));
+    valence=(int)(valence*pow10(EMOTION_VALENCE_ACCURACY));
+
 
     if(_record){
         insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousal);

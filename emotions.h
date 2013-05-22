@@ -9,6 +9,10 @@
 #include "sbs2common.h"
 #include "naivebaiseclassifier.h"
 
+// Number of decimals for arousal/valence (too high give bad results, too low too)
+#define EMOTION_AROUSAL_ACCURACY 4
+#define EMOTION_VALENCE_ACCURACY 5
+
 class Emotions : public QObject{
     Q_OBJECT
 
