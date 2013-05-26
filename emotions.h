@@ -12,11 +12,13 @@
 // Number of decimals for arousal/valence (too high give bad results, too low too)
 #define EMOTION_AROUSAL_ACCURACY 4
 #define EMOTION_VALENCE_ACCURACY 5
+#define EMOTION_USERNAME "adrien"
 
 class Emotions : public QObject{
     Q_OBJECT
 
 private:
+    QString _dataPath;
     NaiveBayesClassifier* _arousalClassifier;
     NaiveBayesClassifier* _valenceClassifier;
 
