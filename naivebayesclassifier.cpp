@@ -34,13 +34,15 @@ QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
 
     QMapIterator<double, double> featureIt(*featureSet);
     while (featureIt.hasNext()) {
-        foreach(QString klass, _trainedClasses->keys()){
-            if(classProbability->value(klass)!=0)
-            classProbability->insert(klass,
-                                     classProbability->value(klass)
-                                     + (featureIt.value() * log(probability(featureIt.key(), klass))));
-        }
         featureIt.next();
+        foreach(QString klass, _trainedClasses->keys()){
+            int prob = probability(featureIt.key(), klass);
+            if(prob!=0){
+                classProbability->insert(klass,
+                                         classProbability->value(klass)
+                                         + (featureIt.value() * log(prob)));
+            }
+        }
     }
 
     foreach(QString klass, classProbability->keys()){
@@ -63,9 +65,14 @@ QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
 }
 
 double NaiveBayesClassifier::probability(double feature, QString klass){
-    double num = _trainedClasses->value(klass)->value(feature)+1.0;
-    double den = _totalFeatureOccurrences->value(feature)+_trainedClasses->size();
-    return num/den;
+    int prob = 0;
+    if(_trainedClasses->value(klass)->contains(feature) && _totalFeatureOccurrences->contains(feature)){
+        double num = _trainedClasses->value(klass)->value(feature)+1.0;
+        double den = _totalFeatureOccurrences->value(feature)+_trainedClasses->size();
+        prob=num/den;
+    }
+    qDebug()<<"Probability for klass : "<<klass<<" and feature : "<<feature<<" is "<<prob;
+    return prob;
 }
 
 QMap<QString,QMap<double, double>*>& NaiveBayesClassifier::getTrainedClasses() const{
