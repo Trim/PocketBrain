@@ -38,37 +38,24 @@ void Emotions::arousalValence(double arousal, double valence){
     valence=(int)(valence*pow10(EMOTION_VALENCE_ACCURACY));
 
     if(_record){
-        insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousal);
-        insertValueAndTotal(_valenceSet, _totalValenceOccurrences, valence);
+        insertValue(_arousalSet, arousal);
+        insertValue(_valenceSet, valence);
     }
 
     if(_saveCalm){
-        updateTrainedClass("calm", "positive");
+        updateTrainedClass("calm", arousal, "positive", valence);
     }
     if(_saveJoy){
-        updateTrainedClass("exited", "positive");
+        updateTrainedClass("exited", arousal, "positive", valence);
     }
     if(_saveSad){
-        updateTrainedClass("calm", "negative");
+        updateTrainedClass("calm", arousal, "negative", valence);
     }
     if(_saveFear){
-        updateTrainedClass("exited", "negative");
+        updateTrainedClass("exited", arousal, "negative", valence);
     }
 
     if(_guess){
-        foreach(QString klass, _trainedArousalClasses->keys()){
-            qDebug()<<"Emo : klass "<<klass<<" has "<<_trainedArousalClasses->value(klass)->size()<<" values";
-        }
-        if(_arousalClassifier==NULL){
-            _arousalClassifier = new NaiveBayesClassifier(_trainedArousalClasses, _totalArousalOccurrences);
-        }
-        foreach(QString klass, _trainedValenceClasses->keys()){
-            qDebug()<<"Emo : klass "<<klass<<" has "<<_trainedValenceClasses->value(klass)->size()<<" values";
-        }
-        if(_valenceClassifier==NULL){
-            _valenceClassifier = new NaiveBayesClassifier(_trainedValenceClasses, _totalValenceOccurrences);
-        }
-
         curArousal = _arousalClassifier->classify(_arousalSet);
         curValence = _valenceClassifier->classify(_valenceSet);
 
@@ -139,40 +126,45 @@ void Emotions::insertValue(QMap<double, double> *valueSet, double val){
     }
 }
 
-void Emotions::updateTrainedClass(QString arousal, QString valence){
-    if(_trainedArousalClasses->contains(arousal)){
+void Emotions::updateTrainedClass(QString arousalStr, int arousalVal, QString valenceStr, int valenceVal){
+    insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousalVal);
+    insertValueAndTotal(_valenceSet, _totalValenceOccurrences, valenceVal);
+
+    if(_trainedArousalClasses->contains(arousalStr)){
         QMapIterator<double, double> arousalIt(*_arousalSet);
         while (arousalIt.hasNext()) {
             arousalIt.next();
             double curKey = arousalIt.key();
             double curVal = arousalIt.value();
-            if(_trainedArousalClasses->value(arousal)->contains(curKey)){
-                _trainedArousalClasses->value(arousal)->insert(curKey,
-                                                               _trainedArousalClasses->value(arousal)->value(curKey)+curVal);
+            if(_trainedArousalClasses->value(arousalStr)->contains(curKey)){
+                _trainedArousalClasses->value(arousalStr)->insert(curKey,
+                                                               _trainedArousalClasses->value(arousalStr)->value(curKey)+curVal);
             }else{
-                _trainedArousalClasses->value(arousal)->insert(curKey,curVal);
+                _trainedArousalClasses->value(arousalStr)->insert(curKey,curVal);
             }
         }
     }else{
-        _trainedArousalClasses->insert(arousal, _arousalSet);
+        _trainedArousalClasses->insert(arousalStr, _arousalSet);
     }
 
-    if(_trainedValenceClasses->contains(valence)){
+    if(_trainedValenceClasses->contains(valenceStr)){
         QMapIterator<double, double> valenceIt(*_valenceSet);
         while (valenceIt.hasNext()) {
             valenceIt.next();
             double curKey = valenceIt.key();
             double curVal = valenceIt.value();
-            if(_trainedValenceClasses->value(valence)->contains(curKey)){
-                _trainedValenceClasses->value(valence)->insert(curKey,
-                                                               _trainedValenceClasses->value(valence)->value(curKey)+curVal);
+            if(_trainedValenceClasses->value(valenceStr)->contains(curKey)){
+                _trainedValenceClasses->value(valenceStr)->insert(curKey,
+                                                               _trainedValenceClasses->value(valenceStr)->value(curKey)+curVal);
             }else{
-                _trainedValenceClasses->value(valence)->insert(curKey,curVal);
+                _trainedValenceClasses->value(valenceStr)->insert(curKey,curVal);
             }
         }
     }else{
-        _trainedValenceClasses->insert(valence, _valenceSet);
+        _trainedValenceClasses->insert(valenceStr, _valenceSet);
     }
+    _arousalClassifier = new NaiveBayesClassifier(_trainedArousalClasses,_totalArousalOccurrences);
+    _valenceClassifier = new NaiveBayesClassifier(_trainedValenceClasses,_totalArousalOccurrences);
 }
 
 void Emotions::storeClassifiers(){

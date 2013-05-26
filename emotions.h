@@ -44,7 +44,7 @@ private:
 
     void insertValueAndTotal(QMap<double, double>* valueSet, QMap<double, double>* totalSet, double val);
     void insertValue(QMap<double, double> *valueSet, double val);
-    void updateTrainedClass(QString arousal, QString valence);
+    void updateTrainedClass(QString arousalStr, int arousalVal, QString valenceStr, int valenceVal);
     void getClassifiers();
     void resetCurrData();
 
