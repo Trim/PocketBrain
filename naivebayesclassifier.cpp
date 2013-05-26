@@ -77,31 +77,39 @@ QMap<double, double>& NaiveBayesClassifier::getTotalFeatureOccurences() const{
 }
 
 QDataStream &operator<<(QDataStream &out, const NaiveBayesClassifier &naiveBayes){
-    QMap<QString, QMap<double,double>*>* trainedClasses =
-            new QMap<QString, QMap<double,double>*>(naiveBayes.getTrainedClasses());
-    qDebug()<<"size  : "<<naiveBayes.getTrainedClasses().size();
-    out<<naiveBayes.getTrainedClasses().size();
+    qDebug()<<"size  : "<<naiveBayes._trainedClasses->size();
 
-    foreach(QString klass, trainedClasses->keys()){
+    out<<naiveBayes._trainedClasses->size();
+    foreach(QString klass, naiveBayes._trainedClasses->keys()){
         out<<klass;
-        out<<*(trainedClasses->value(klass));
+        out<<naiveBayes._trainedClasses->value(klass)->keys().size();
+        foreach(double feature, (naiveBayes._trainedClasses->value(klass)->keys())){
+            out<<feature<<naiveBayes._trainedClasses->value(klass)->value(feature);
+        }
     }
-    out << naiveBayes.getTotalFeatureOccurences();
+    out << *(naiveBayes._totalFeatureOccurrences);
     return out;
 }
 
 QDataStream &operator>>(QDataStream &in, NaiveBayesClassifier &naiveBayes){
-    int sizeMap;
-    naiveBayes._trainedClasses=new QMap<QString,QMap<double, double>*>();
+    int nbTrainedClasses;
 
-    QMap<double, double> totalFeatureOccurences;
+    in >> nbTrainedClasses;
+    for(int i=0;i<nbTrainedClasses;++i){
+        QString klass;
+        QMap<double,double>* features = new QMap<double,double>();
+        int nbFeatures;
 
-    in >> sizeMap;
-    for(int i=0;i<sizeMap;++i){
-        QMap<double, double> trainedValue;
-        QString trainedKey;
-        in >> trainedKey >> trainedValue;
-        naiveBayes._trainedClasses->insert(trainedKey, &trainedValue);
+        in >> klass;
+        in>>nbFeatures;
+        naiveBayes._trainedClasses->insert(klass, features);
+
+        for(int j=0;j<nbFeatures;++j){
+            double feature;
+            double occFeature;
+            in >> feature >> occFeature;
+            features->insert(feature, occFeature);
+        }
     }
     in >> *(naiveBayes._totalFeatureOccurrences);
     return in;
