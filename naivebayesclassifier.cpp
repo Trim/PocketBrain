@@ -31,12 +31,11 @@ QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
     foreach(QString klass, _trainedClasses->keys()){
         classProbability->insert(klass, 0);
     }
-
     QMapIterator<double, double> featureIt(*featureSet);
     while (featureIt.hasNext()) {
         featureIt.next();
         foreach(QString klass, _trainedClasses->keys()){
-            int prob = probability(featureIt.key(), klass);
+            double prob = probability(featureIt.key(), klass);
             if(prob!=0){
                 classProbability->insert(klass,
                                          classProbability->value(klass)
@@ -65,7 +64,7 @@ QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
 }
 
 double NaiveBayesClassifier::probability(double feature, QString klass){
-    int prob = 0;
+    double prob = 0;
     if(_trainedClasses->value(klass)->contains(feature) && _totalFeatureOccurrences->contains(feature)){
         double num = _trainedClasses->value(klass)->value(feature)+1.0;
         double den = _totalFeatureOccurrences->value(feature)+_trainedClasses->size();
