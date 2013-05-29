@@ -45,7 +45,7 @@ QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
     }
 
     foreach(QString klass, classProbability->keys()){
-        qDebug()<<klass<<" has prob. "<<classProbability->value(klass)<< " and size "<<_trainedClasses->value(klass)->size();
+        qDebug()<<"Finally class "<<klass<<" has prob. "<<classProbability->value(klass)<< " and size "<<_trainedClasses->value(klass)->size();
     }
 
     QString resultClass="";
@@ -55,7 +55,7 @@ QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
             resultClass=klass;
         }
 
-        if(classProbability->value(klass)>classProbability->value(resultClass)){
+        if(classProbability->value(klass) > classProbability->value(resultClass)){
             resultClass=klass;
         }
     }
@@ -70,7 +70,6 @@ double NaiveBayesClassifier::probability(double feature, QString klass){
         double den = _totalFeatureOccurrences->value(feature)+_trainedClasses->size();
         prob=num/den;
     }
-    qDebug()<<"Probability for klass : "<<klass<<" and feature : "<<feature<<" is "<<prob;
     return prob;
 }
 

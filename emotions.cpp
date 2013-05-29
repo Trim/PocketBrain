@@ -165,7 +165,6 @@ void Emotions::getClassifiers(){
     in.setVersion(QDataStream::Qt_4_8);
     in>>*_arousalClassifier;
     in>>*_valenceClassifier;
-    printf("Finish to read classifiers");
 }
 
 void Emotions::resetCurrData(){

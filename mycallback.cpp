@@ -43,7 +43,6 @@ void MyCallback::getData(Sbs2Packet *packet)
     // colorOfMind : Valence = (left beta power)/(left alpha power) – (right beta power)/(right alpha power)
     double valence = (af3_beta/af3_alpha - af4_beta/af4_alpha);
 
-    //qDebug()<<"arousal : "<<arousal<<" and valence : "<<valence<<" emited";
     emit arousalValence(arousal,valence);
 }
 
