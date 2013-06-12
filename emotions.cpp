@@ -176,21 +176,23 @@ void Emotions::storeClass(QString klassName, NaiveBayesClassifier *classifier){
         return;
     }
 
-    QFile file(_dataPath+"."+klassName);
-    if (!file.open(QIODevice::WriteOnly)) {
-        qDebug() << "Emotions : cannot open file "+file.fileName()+" : "
-                 << qPrintable(file.errorString()) << file.fileName()<< endl;
-        return;
-    }
+    if(classifier->getTrainedClasses().contains(klassName)){
+        QFile file(_dataPath+"."+klassName);
+        if (!file.open(QIODevice::WriteOnly)) {
+            qDebug() << "Emotions : cannot open file "+file.fileName()+" : "
+                     << qPrintable(file.errorString()) << file.fileName()<< endl;
+            return;
+        }
 
-    QMapIterator<double, double>* clasIt = new QMapIterator<double,double>(*classifier->getTrainedClasses().value(klassName));
-    while(clasIt->hasNext()){
-        clasIt->next();
-        for(int j=0;j<clasIt->value();++j){
-            QString* strVal=new QString("");
-            strVal->setNum(clasIt->key(),'f', acc);
-            file.write(strVal->toAscii());
-            file.putChar('\n');
+        QMapIterator<double, double>* clasIt = new QMapIterator<double,double>(*classifier->getTrainedClasses().value(klassName));
+        while(clasIt->hasNext()){
+            clasIt->next();
+            for(int j=0;j<clasIt->value();++j){
+                QString* strVal=new QString("");
+                strVal->setNum(clasIt->key(),'f', acc);
+                file.write(strVal->toAscii());
+                file.putChar('\n');
+            }
         }
     }
 }
