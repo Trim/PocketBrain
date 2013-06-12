@@ -11,7 +11,10 @@ http://www.nils-haldenwang.de/computer-science/machine-learning/how-to-apply-nai
 #include <math.h>
 #include <QObject>
 #include <QDataStream>
-#include <QDebug>
+
+#ifdef DEBUG
+    #include <QDebug>
+#endif
 
 class NaiveBayesClassifier: public QObject{
     Q_OBJECT

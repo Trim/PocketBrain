@@ -44,9 +44,11 @@ QString NaiveBayesClassifier::classify(QMap<double, double> *featureSet){
         }
     }
 
-    /*foreach(QString klass, classProbability->keys()){
-        qDebug()<<"Finally class "<<klass<<" has prob. "<<classProbability->value(klass)<< " and size "<<_trainedClasses->value(klass)->size();
-    }*/
+#ifdef DEBUG
+    foreach(QString klass, classProbability->keys()){
+        qDebug()<<"NaiveBayesClassifier : Finally class "<<klass<<" has prob. "<<classProbability->value(klass)<< " and size "<<_trainedClasses->value(klass)->size();
+    }
+#endif
 
     QString resultClass="";
 
@@ -99,7 +101,9 @@ QMap<double, double>& NaiveBayesClassifier::getTotalFeatureOccurences() const{
 }
 
 QDataStream &operator<<(QDataStream &out, const NaiveBayesClassifier &naiveBayes){
-    qDebug()<<"size  : "<<naiveBayes._trainedClasses->size();
+#ifdef DEBUG
+    qDebug()<<"NaiveBayesClassifier : size of _trainedClasses  : "<<naiveBayes._trainedClasses->size();
+#endif
 
     out<<naiveBayes._trainedClasses->size();
     foreach(QString klass, naiveBayes._trainedClasses->keys()){
