@@ -43,6 +43,8 @@ private:
     void getClassifiers();
     void resetCurrData();
 
+    QString getEmotion();
+    void storeClass(QString klassName, NaiveBayesClassifier *classifier);
 public:
     Emotions();
 

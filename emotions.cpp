@@ -51,23 +51,7 @@ void Emotions::arousalValence(double arousal, double valence){
     }
 
     if(_guess){
-        curArousal = _arousalClassifier->classify(_arousalSet);
-        curValence = _valenceClassifier->classify(_valenceSet);
-
-        QString emotion;
-        if(curArousal.contains("calm") && curValence.contains("positive")){
-            emotion="calm";
-        }else if(curArousal.contains("calm") && curValence.contains("negative")){
-            emotion="sad";
-        }else if(curArousal.contains("exited") && curValence.contains("positive")){
-            emotion="joy";
-        }else if(curArousal.contains("exited") && curValence.contains("negative")){
-            emotion="fear";
-        }else{
-            emotion="try again later";
-        }
-
-        emit giveEmotion(QVariant(emotion));
+        emit giveEmotion(QVariant(getEmotion()));
         _guess=false;
     }
 }
@@ -128,7 +112,41 @@ void Emotions::storeClassifiers(){
     out.setVersion(QDataStream::Qt_4_8);
     out<<*_arousalClassifier;
     out<<*_valenceClassifier;
+    storeClass("calm", _arousalClassifier);
+    storeClass("exited", _arousalClassifier);
+    storeClass("positive", _valenceClassifier);
+    storeClass("negative", _valenceClassifier);
 }
+
+void Emotions::storeClass(QString klassName, NaiveBayesClassifier *classifier){
+    double acc=0;
+    if(klassName.contains("calm") || klassName.contains("exited")){
+        acc=EMOTION_AROUSAL_ACCURACY;
+    }else if(klassName.contains("positive") || klassName.contains("negative")){
+        acc=EMOTION_VALENCE_ACCURACY;
+    }else{
+        return;
+    }
+
+    QFile file(_dataPath+"."+klassName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qDebug() << "Emotions : cannot open file "+file.fileName()+" : "
+                 << qPrintable(file.errorString()) << file.fileName()<< endl;
+        return;
+    }
+
+    QMapIterator<double, double>* clasIt = new QMapIterator<double,double>(*classifier->getTrainedClasses().value(klassName));
+    while(clasIt->hasNext()){
+        clasIt->next();
+        for(int j=0;j<clasIt->value();++j){
+            QString* strVal=new QString("");
+            strVal->setNum(clasIt->key(),'f', acc);
+            file.write(strVal->toAscii());
+            file.putChar('\n');
+        }
+    }
+}
+
 
 void Emotions::getClassifiers(){
     QFile file(_dataPath);
@@ -147,3 +165,23 @@ void Emotions::resetCurrData(){
     _arousalSet->clear();
     _valenceSet->clear();
 }
+
+QString Emotions::getEmotion(){
+    curArousal = _arousalClassifier->classify(_arousalSet);
+    curValence = _valenceClassifier->classify(_valenceSet);
+
+    QString emotion;
+    if(curArousal.contains("calm") && curValence.contains("positive")){
+        emotion="calm";
+    }else if(curArousal.contains("calm") && curValence.contains("negative")){
+        emotion="sad";
+    }else if(curArousal.contains("exited") && curValence.contains("positive")){
+        emotion="joy";
+    }else if(curArousal.contains("exited") && curValence.contains("negative")){
+        emotion="fear";
+    }else{
+        emotion="try again later";
+    }
+    return emotion;
+}
+
