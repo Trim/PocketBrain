@@ -30,8 +30,8 @@ Emotions::Emotions()
 }
 
 void Emotions::arousalValence(double arousal, double valence){
-    arousal=(int)(arousal*pow10(EMOTION_AROUSAL_ACCURACY));
-    valence=(int)(valence*pow10(EMOTION_VALENCE_ACCURACY));
+    arousal=(int)(arousal*qPow(10,EMOTION_AROUSAL_ACCURACY));
+    valence=(int)(valence*qPow(10,EMOTION_VALENCE_ACCURACY));
 
     if(_record){
         insertValue(_arousalSet, arousal);
@@ -152,7 +152,7 @@ void Emotions::storeClassifiers(){
     QFile file(_dataPath);
 
     if (!file.open(QIODevice::WriteOnly)) {
-        qDebug() << "Emotions : cannot open file emotionClasses.dat : "
+        qDebug() << "Emotions : cannot open file "<< file.fileName() <<" : "
                  << qPrintable(file.errorString()) << file.fileName()<< endl;
         return;
     }
@@ -201,7 +201,7 @@ void Emotions::storeClass(QString klassName, NaiveBayesClassifier *classifier){
 void Emotions::getClassifiers(){
     QFile file(_dataPath);
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Emotions : cannot open file emotionClasses.dat : "
+        qDebug() << "Emotions : cannot open file "<< file.fileName() <<" : "
                  << qPrintable(file.errorString()) << file.fileName() << endl;
         return;
     }

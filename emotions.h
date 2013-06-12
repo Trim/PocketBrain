@@ -3,11 +3,12 @@
 
 #include <QString>
 #include <QObject>
-#include <QDebug>
 #include <QMapIterator>
 #include <QVariant>
 #include <QDateTime>
 #include <QProcess>
+#include <QDebug>
+#include <qmath.h>
 
 #include "sbs2common.h"
 #include "naivebayesclassifier.h"
