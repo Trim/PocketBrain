@@ -19,7 +19,7 @@ Rectangle {
     function updateEmotion(emotion_)
     {
         page.emotion = emotion_;
-        infoText.text = "...you are "+emotion_;
+        infoText.text = "You are "+emotion_;
     }
 
     signal toggleSaveCalm(bool saving);
@@ -57,7 +57,7 @@ Rectangle {
                     infoText.text = "Record some data before I can guess";
                 }else{
                     guessEmotion();
-                    infoText.text = "I guess...";
+                    infoText.text = "";
                 }
             }
         }
