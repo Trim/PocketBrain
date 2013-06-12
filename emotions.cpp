@@ -19,7 +19,7 @@ Emotions::Emotions()
     _saveCalm=false;
     _saveJoy=false;
     _saveSad=false;
-    _saveFear=false;
+    _saveAngry=false;
 
     /* These sets are used to record current to find later the emotion*/
     _arousalSet = new QMap<double,double>();
@@ -94,7 +94,7 @@ void Emotions::arousalValence(double arousal, double valence){
     if(_saveSad){
         updateTrainedClass("calm", arousal, "negative", valence);
     }
-    if(_saveFear){
+    if(_saveAngry){
         updateTrainedClass("exited", arousal, "negative", valence);
     }
 
@@ -119,8 +119,8 @@ void Emotions::toggleSaveSad(bool save){
     resetCurrData();
 }
 
-void Emotions::toggleSaveFear(bool save){
-    _saveFear=save;
+void Emotions::toggleSaveAngry(bool save){
+    _saveAngry=save;
     resetCurrData();
 }
 
@@ -228,7 +228,7 @@ QString Emotions::getEmotion(){
     }else if(curArousal.contains("exited") && curValence.contains("positive")){
         emotion="joy";
     }else if(curArousal.contains("exited") && curValence.contains("negative")){
-        emotion="fear";
+        emotion="angry";
     }else{
         emotion="try again later";
     }

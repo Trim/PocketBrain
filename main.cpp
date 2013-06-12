@@ -37,7 +37,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(myCallback, SIGNAL(arousalValence(double, double)), emotions, SLOT(arousalValence(double,double)));
     QObject::connect(rootObject, SIGNAL(toggleSaveSad(bool)), emotions, SLOT(toggleSaveSad(bool)));
     QObject::connect(rootObject, SIGNAL(toggleSaveCalm(bool)), emotions, SLOT(toggleSaveCalm(bool)));
-    QObject::connect(rootObject, SIGNAL(toggleSaveFear(bool)), emotions, SLOT(toggleSaveFear(bool)));
+    QObject::connect(rootObject, SIGNAL(toggleSaveAngry(bool)), emotions, SLOT(toggleSaveAngry(bool)));
     QObject::connect(rootObject, SIGNAL(toggleSaveJoy(bool)), emotions, SLOT(toggleSaveJoy(bool)));
     QObject::connect(rootObject, SIGNAL(storeClassifiers()), emotions, SLOT(storeClassifiers()));
     QObject::connect(rootObject, SIGNAL(guessEmotion()), emotions, SLOT(guessEmotion()));

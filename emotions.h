@@ -38,7 +38,7 @@ private:
     bool _saveCalm;
     bool _saveJoy;
     bool _saveSad;
-    bool _saveFear;
+    bool _saveAngry;
     bool _guess;
     bool _record;
 
@@ -64,7 +64,7 @@ public:
 public slots:
     void arousalValence(double arousal, double valence);
     void toggleSaveCalm(bool save);
-    void toggleSaveFear(bool save);
+    void toggleSaveAngry(bool save);
     void toggleSaveSad(bool save);
     void toggleSaveJoy(bool save);
     void guessEmotion();

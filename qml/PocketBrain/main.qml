@@ -24,7 +24,7 @@ Rectangle {
 
     signal toggleSaveCalm(bool saving);
     signal toggleSaveSad(bool saving);
-    signal toggleSaveFear(bool saving);
+    signal toggleSaveAngry(bool saving);
     signal toggleSaveJoy(bool saving);
     signal guessEmotion();
     signal storeClassifiers();
@@ -104,7 +104,7 @@ Rectangle {
                 anchors.fill: parent
                 onClicked:
                 {
-                    if(!initSadDiv.saving && !initFearDiv.saving && !initJoyDiv.saving){
+                    if(!initSadDiv.saving && !initAngryDiv.saving && !initJoyDiv.saving){
                         infoText.text="";
                         parent.saving=!parent.saving;
                         page.toggleSaveCalm(parent.saving);
@@ -155,7 +155,7 @@ Rectangle {
                 anchors.fill: parent
                 onClicked:
                 {
-                    if(!initCalmDiv.saving && !initFearDiv.saving && !initJoyDiv.saving){
+                    if(!initCalmDiv.saving && !initAngryDiv.saving && !initJoyDiv.saving){
                         infoText.text="";
                         parent.saving=!parent.saving;
                         page.toggleSaveSad(parent.saving);
@@ -173,7 +173,7 @@ Rectangle {
         }
 
         Rectangle{
-            id:initFearDiv;
+            id:initAngryDiv;
             anchors.left:initSadDiv.right;
             width:parent.width/4;
             height:parent.height;
@@ -181,7 +181,7 @@ Rectangle {
             color:"black";
             property bool saving: false;
             Text{
-                id:initFearText;
+                id:initAngryText;
                 anchors.top:parent.top;
                 font.pixelSize: 20;
                 width:parent.width;
@@ -192,11 +192,11 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter;
             }
             Text{
-                anchors.top: initFearText.baseline;
+                anchors.top: initAngryText.baseline;
                 width:parent.width;
-                font.pixelSize: initFearText.font.pixelSize;
+                font.pixelSize: initAngryText.font.pixelSize;
                 color: "white";
-                text: "Fear";
+                text: "Angry";
                 horizontalAlignment: Text.AlignHCenter;
                 verticalAlignment: Text.AlignVCenter;
             }
@@ -208,12 +208,12 @@ Rectangle {
                     if(!initCalmDiv.saving && !initSadDiv.saving && !initJoyDiv.saving){
                         infoText.text="";
                         parent.saving=!parent.saving;
-                        page.toggleSaveFear(parent.saving);
+                        page.toggleSaveAngry(parent.saving);
 
                         if(parent.saving){
-                            initFearText.text="Stop train"; // it's the next action
+                            initAngryText.text="Stop train"; // it's the next action
                         }else{
-                            initFearText.text="Start train";
+                            initAngryText.text="Start train";
                         }
                     }else{
                         infoText.text="Please stop other training before starting this one";
@@ -224,7 +224,7 @@ Rectangle {
 
         Rectangle{
             id:initJoyDiv;
-            anchors.left: initFearDiv.right
+            anchors.left: initAngryDiv.right
             width:parent.width/4;
             height:parent.height;
             border.color:"white";
@@ -255,7 +255,7 @@ Rectangle {
                 anchors.fill: parent
                 onClicked:
                 {
-                    if(!initCalmDiv.saving && !initFearDiv.saving && !initSadDiv.saving){
+                    if(!initCalmDiv.saving && !initAngryDiv.saving && !initSadDiv.saving){
                         infoText.text="";
                         parent.saving=!parent.saving;
                         page.toggleSaveJoy(parent.saving);
@@ -318,7 +318,7 @@ Rectangle {
                 anchors.fill: parent
                 onClicked:
                 {
-                    if(!initCalmDiv.saving && !initFearDiv.saving && !initSadDiv.saving && !initJoyDiv.saving){
+                    if(!initCalmDiv.saving && !initAngryDiv.saving && !initSadDiv.saving && !initJoyDiv.saving){
                         infoText.text="";
                         page.storeClassifiers();
                     }else{
