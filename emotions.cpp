@@ -9,26 +9,21 @@ Emotions::Emotions()
             +".dat";
     qDebug()<<"Data path : "<<_dataPath;
 
+    /* Classifiers to fill (either by file in data path or by UI) */
     _arousalClassifier=new NaiveBayesClassifier();
     _valenceClassifier=new NaiveBayesClassifier();
-    _saveCalm=false;
-    _saveJoy=false;
-    _saveSad=false;
-    _saveFear=false;
-    _arousalSet = new QMap<double,double>();
-    _valenceSet = new QMap<double,double>();
 
-    _totalArousalOccurrences = new QMap<double, double>();
-    _totalValenceOccurrences = new QMap<double, double>();
-    _trainedArousalClasses = new QMap<QString, QMap<double, double>*>();
-    _trainedValenceClasses = new QMap<QString, QMap<double, double>*>();
-
+    /* UI buttons */
     _guess=false;
     _record=false;
     _saveCalm=false;
     _saveJoy=false;
     _saveSad=false;
     _saveFear=false;
+
+    /* These sets are used to record current to find later the emotion*/
+    _arousalSet = new QMap<double,double>();
+    _valenceSet = new QMap<double,double>();
 
     getClassifiers();
 }
@@ -108,11 +103,6 @@ void Emotions::guessEmotion(){
     _guess=true;
 }
 
-void Emotions::insertValueAndTotal(QMap<double, double> *valueSet, QMap<double, double> *totalSet, double val){
-    insertValue(valueSet, val);
-    insertValue(totalSet, val);
-}
-
 void Emotions::insertValue(QMap<double, double> *valueSet, double val){
     if(valueSet->contains(val)){
         valueSet->insert(val, valueSet->value(val)+1);
@@ -122,22 +112,8 @@ void Emotions::insertValue(QMap<double, double> *valueSet, double val){
 }
 
 void Emotions::updateTrainedClass(QString arousalStr, int arousalVal, QString valenceStr, int valenceVal){
-    insertValueAndTotal(_arousalSet, _totalArousalOccurrences, arousalVal);
-    insertValueAndTotal(_valenceSet, _totalValenceOccurrences, valenceVal);
-
-    if(_trainedArousalClasses->contains(arousalStr)){
-        insertValue(_trainedArousalClasses->value(arousalStr), arousalVal);
-    }else{
-        _trainedArousalClasses->insert(arousalStr, new QMap<double,double>(*_arousalSet));
-    }
-
-    if(_trainedValenceClasses->contains(valenceStr)){
-        insertValue(_trainedValenceClasses->value(valenceStr), valenceVal);
-    }else{
-        _trainedValenceClasses->insert(valenceStr, new QMap<double,double>(*_valenceSet));
-    }
-    _arousalClassifier = new NaiveBayesClassifier(_trainedArousalClasses,_totalArousalOccurrences);
-    _valenceClassifier = new NaiveBayesClassifier(_trainedValenceClasses,_totalValenceOccurrences);
+    _arousalClassifier->addValueForClass(arousalStr, arousalVal);
+    _valenceClassifier->addValueForClass(valenceStr, valenceVal);
 }
 
 void Emotions::storeClassifiers(){

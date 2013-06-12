@@ -19,16 +19,12 @@ class Emotions : public QObject{
 
 private:
     QString _dataPath;
+
+    /* Classifiers to fill (either by file in data path or by UI) */
     NaiveBayesClassifier* _arousalClassifier;
     NaiveBayesClassifier* _valenceClassifier;
 
-    QMap<QString,QMap<double, double>*>* _trainedArousalClasses; // calm / exited
-    QMap<QString,QMap<double, double>*>* _trainedValenceClasses; // negative / positive
-
-    // Sets with value and with number of occurences over all the process and over all states
-    QMap<double, double>* _totalArousalOccurrences;
-    QMap<double, double>* _totalValenceOccurrences;
-
+    /* UI buttons */
     bool _saveCalm;
     bool _saveJoy;
     bool _saveSad;
@@ -42,7 +38,6 @@ private:
     QString curArousal;
     QString curValence;
 
-    void insertValueAndTotal(QMap<double, double>* valueSet, QMap<double, double>* totalSet, double val);
     void insertValue(QMap<double, double> *valueSet, double val);
     void updateTrainedClass(QString arousalStr, int arousalVal, QString valenceStr, int valenceVal);
     void getClassifiers();

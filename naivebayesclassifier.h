@@ -24,6 +24,7 @@ private:
     QMap<double, double> * _totalFeatureOccurrences;
 
     double probability(double feature, QString klass);
+    void incrementNbValueForSet(QMap<double, double> *valueSet, double val);
 
 public:
     NaiveBayesClassifier();
@@ -32,8 +33,10 @@ public:
     NaiveBayesClassifier(QMap<QString,QMap<double, double>*>& trainedClasses,
                          QMap<double, double>& totalFeatureOccurrences);
     NaiveBayesClassifier(const NaiveBayesClassifier& naiveBayes);
+
     NaiveBayesClassifier&  operator=(const NaiveBayesClassifier& naiveBayes);
 
+    void addValueForClass(QString klass, double value);
     QString classify(QMap<double, double>* featureSet); // featureSet : set of values to classify with number of occurence
     QMap<QString,QMap<double, double>*> &getTrainedClasses() const;
     QMap<double, double> &getTotalFeatureOccurences() const;
