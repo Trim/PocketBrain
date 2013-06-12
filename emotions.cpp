@@ -25,6 +25,7 @@ Emotions::Emotions()
     _arousalSet = new QMap<double,double>();
     _valenceSet = new QMap<double,double>();
 
+    _lastPlot=QDateTime::currentDateTime();
     getClassifiers();
 }
 
@@ -35,6 +36,53 @@ void Emotions::arousalValence(double arousal, double valence){
     if(_record){
         insertValue(_arousalSet, arousal);
         insertValue(_valenceSet, valence);
+
+        QString* movie = new QString(EMOTION_MOVIE);
+        if(!movie->isEmpty()){
+            QFile file(_dataPath+"."+EMOTION_MOVIE);
+            if (!file.open(QIODevice::WriteOnly|QIODevice::Append)) {
+                qDebug() << "Emotions : cannot open file "+file.fileName()+" : "
+                         << qPrintable(file.errorString()) << file.fileName()<< endl;
+                return;
+            }
+
+            QString* arousalStr=new QString("");
+            arousalStr->setNum(arousal,'f', EMOTION_AROUSAL_ACCURACY);
+
+            QString* valenceStr=new QString("");
+            valenceStr->setNum(valence,'f', EMOTION_VALENCE_ACCURACY);
+
+            QString emotion = getEmotion();
+            QDateTime time = QDateTime::currentDateTime();
+
+            QString* line = new QString(*arousalStr+" "+*valenceStr+" "+emotion+" "+time.toString("hh:mm:ss:zzz")+"\n");
+            file.write(line->toAscii());
+            file.close();
+
+            if(_lastPlot.msecsTo(time)>EMOTION_PLOT_TIME){
+                // QProcess to call R script
+                /*
+                 * This script will make a boxplot of valence and arousal every
+                 * EMOTION_PLOT_TIME seconds and save them in a pdf.
+                 *
+                 * WARNING : be aware that your computer will make a lot of job using this script
+                 * and it will certainly _overload_ your CPU. You can reduce it by increasing
+                 * EMOTION_PLOT_TIME.
+                */
+                /*QString program = "plot_movie.R";
+                QStringList arguments;
+                arguments << file.fileName()
+                          << _dataPath+".calm"
+                          << _dataPath+".exited"
+                          << _dataPath+".positive"
+                          << _dataPath+".negative";
+
+                QProcess *plotProcess = new QProcess(this);
+                plotProcess->startDetached(program, arguments);
+                _lastPlot=QDateTime::currentDateTime();
+                */
+            }
+        }
     }
 
     if(_saveCalm){
@@ -184,4 +232,3 @@ QString Emotions::getEmotion(){
     }
     return emotion;
 }
-

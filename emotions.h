@@ -6,6 +6,9 @@
 #include <QDebug>
 #include <QMapIterator>
 #include <QVariant>
+#include <QDateTime>
+#include <QProcess>
+
 #include "sbs2common.h"
 #include "naivebayesclassifier.h"
 
@@ -13,6 +16,13 @@
 #define EMOTION_AROUSAL_ACCURACY 4
 #define EMOTION_VALENCE_ACCURACY 5
 #define EMOTION_USERNAME "adrien"
+
+/* Set a movie title in EMOTION_MOVIE to store the recoreded data in a file
+ * It will save : arousal, valence, emotion, time in a file with filename
+ * ended by the EMOTION_MOVIE string
+*/
+#define EMOTION_MOVIE ""
+#define EMOTION_PLOT_TIME 10000
 
 class Emotions : public QObject{
     Q_OBJECT
@@ -35,6 +45,7 @@ private:
     // Sets with value and current number of found values
     QMap<double, double>* _arousalSet;
     QMap<double, double>* _valenceSet;
+
     QString curArousal;
     QString curValence;
 
@@ -45,6 +56,8 @@ private:
 
     QString getEmotion();
     void storeClass(QString klassName, NaiveBayesClassifier *classifier);
+    QDateTime _lastPlot;
+
 public:
     Emotions();
 
