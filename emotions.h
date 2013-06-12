@@ -20,7 +20,7 @@
 /* Set a movie title in EMOTION_MOVIE to store the recoreded data in a file
  * It will save : arousal, valence, emotion, time in a file with filename
  * ended by the EMOTION_MOVIE string
-*/
+ */
 #define EMOTION_MOVIE ""
 #define EMOTION_PLOT_TIME 10000
 

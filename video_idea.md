@@ -30,7 +30,7 @@ And he'll never be manipulated by others
 * So it knows what is your _brain activity_ for each emotion you have
 * And it can apply _statistics_ to know which are your current emotion
 
-# Computer isn't really _PORTABLE_ ...
+# Computer isn't really _TRANSPORTABLE_ ...
 Use your Android phone !
 Smartphone are _real computers_ now !
 
@@ -38,7 +38,7 @@ Smartphone are _real computers_ now !
 No, you'll be able to do it every where with emotive headset!
 
 # Wow, a so small headset is enough accurate ?
-If you train enough your computer, you'll have some good result
+If you train enough your computer, you'll have some good results
 
 # Enough words, have someone done it ?
 Yes, SINLAB at EPFL !
@@ -48,11 +48,11 @@ sinlabsemester-2013/PocketBrain
 sinlabsemester-2013/think-core
 
 # Show me !
-* capture application with Game of Thrones and explication
+* capture application with Game of Thrones and explanations
 * capture of PocketBrain and UI explanations : TRAIN
 * capture of PocketBrain and UI explanations : TRY
 
-## Which are key piece ?
+## Which are key pieces ?
 # Emocap headset
   * closed software (so encrypted communication)
 # Emokit open-source project
@@ -64,3 +64,11 @@ sinlabsemester-2013/think-core
    * make application for Android
 # AOSP (open-source Android code)
  * To use your phone as you want
+
+# Special thanks to
+* Alex Barchiesi
+* Carlos Sanchez
+* Florine Dorsaz
+* Emokit, SmartphoneBrainScanner2
+* KDEnlive, GNU R, Qt
+* and many others
